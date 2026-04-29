@@ -15,3 +15,9 @@ El tablero se divide en cinco columnas principales:
 ## Enlace al tablero 
 
 https://trello.com/b/5McsnME0/batnie-creative-hub
+
+## Gestión del proyecto 
+
+Para este proyecto uso una metodología Agile.
+
+He dividido el proyecto en `frontend`  `server`. 
