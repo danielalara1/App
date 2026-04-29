@@ -1,9 +1,9 @@
+import Home from "./pages/Home";
+
 function App() {
   return (
-    <div>
-      <h1>Batnie está funcionando</h1>
-    </div>
-  )
+    <Home />
+  );
 }
 
-export default App
+export default App;
