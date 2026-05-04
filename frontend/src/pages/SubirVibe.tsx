@@ -2,14 +2,13 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-// --- URL del Túnel (Puerto 5000) ---
 const API_URL = 'https://8wlzgqn7-5000.uks1.devtunnels.ms'; 
 
 export const SubirVibe = () => {
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("Dibujo");
   const [imageUrl, setImageUrl] = useState("");
-  const [mediaUrl, setMediaUrl] = useState(""); // Aquí está la variable que daba error
+  const [mediaUrl, setMediaUrl] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -19,7 +18,7 @@ export const SubirVibe = () => {
         title,
         category,
         imageUrl,
-        mediaUrl // Ahora se envía correctamente
+        mediaUrl 
       });
       navigate("/");
     } catch (error) {
@@ -72,7 +71,6 @@ export const SubirVibe = () => {
             />
           </div>
 
-          {/* --- AÑADIDO: Input para mediaUrl (esto quita el error de setMediaUrl) --- */}
           <div>
             <label className="block text-xs uppercase tracking-widest text-zinc-500 mb-2">Enlace de Referencia (Spotify/Web)</label>
             <input 
@@ -84,9 +82,23 @@ export const SubirVibe = () => {
             />
           </div>
 
-          <button type="submit" className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-lg mt-4 transition-colors">
-            Subir al Hub
-          </button>
+          {/* --- SECCIÓN DE BOTONES --- */}
+          <div className="flex flex-col gap-3 pt-2">
+            <button 
+              type="submit" 
+              className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-lg transition-colors"
+            >
+              Subir al Hub
+            </button>
+
+            <button 
+              type="button" 
+              onClick={() => navigate("/")}
+              className="w-full bg-zinc-800 hover:bg-zinc-700 text-zinc-400 font-semibold py-3 rounded-lg transition-colors border border-zinc-700"
+            >
+              Cancelar
+            </button>
+          </div>
         </div>
       </form>
     </div>
