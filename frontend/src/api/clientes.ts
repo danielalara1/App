@@ -4,8 +4,7 @@ export interface User {
   email: string;
   createdAt?: string;
 }
-
-const API_URL = 'http://localhost:5000';
+const API_URL = 'https://8wlzgqn7-5000.uks1.devtunnels.ms';
 
 export const getUsers = async (): Promise<User[]> => {
   const response = await fetch(`${API_URL}/users`);

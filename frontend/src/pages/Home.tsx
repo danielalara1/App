@@ -3,8 +3,12 @@ import axios from "axios";
 import { Navbar } from "../components/Navbar";
 import { VibeCard } from "../components/VibeCard";
 
+// --- AÑADIDO: Definición de la URL del Túnel ---
+// SUSTITUYE el link de abajo por el tuyo del puerto 5000 que termina en .devtunnels.ms
+const API_URL = 'https://8wlzgqn7-5000.uks1.devtunnels.ms'; 
+
 interface Vibe {
-  _id: string;        
+  _id: string;         
   title: string;
   category: string;
   imageUrl: string;
@@ -20,8 +24,9 @@ const Home = () => {
     const fetchVibes = async () => {
       try {
         setLoading(true);
-        const response = await axios.get("http://localhost:5000/api/vibes");
-       
+        // Ahora API_URL ya existe y Axios sabe a dónde ir
+        const response = await axios.get(`${API_URL}/api/vibes`);
+        
         if (response.data.length === 0) {
           setVibes([{
             _id: "1",

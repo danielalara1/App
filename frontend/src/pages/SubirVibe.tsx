@@ -2,21 +2,24 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
+// --- URL del Túnel (Puerto 5000) ---
+const API_URL = 'https://8wlzgqn7-5000.uks1.devtunnels.ms'; 
+
 export const SubirVibe = () => {
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("Dibujo");
   const [imageUrl, setImageUrl] = useState("");
-  const [mediaUrl, setMediaUrl] = useState("");
+  const [mediaUrl, setMediaUrl] = useState(""); // Aquí está la variable que daba error
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/api/vibes", {
+      await axios.post(`${API_URL}/api/vibes`, {
         title,
         category,
         imageUrl,
-        mediaUrl
+        mediaUrl // Ahora se envía correctamente
       });
       navigate("/");
     } catch (error) {
@@ -69,15 +72,15 @@ export const SubirVibe = () => {
             />
           </div>
 
+          {/* --- AÑADIDO: Input para mediaUrl (esto quita el error de setMediaUrl) --- */}
           <div>
-            <label className="block text-xs uppercase tracking-widest text-zinc-500 mb-2">URL del Medio</label>
+            <label className="block text-xs uppercase tracking-widest text-zinc-500 mb-2">Enlace de Referencia (Spotify/Web)</label>
             <input 
               type="text" 
               className="w-full bg-zinc-800 border border-zinc-700 p-3 rounded-lg focus:outline-none"
               value={mediaUrl}
               onChange={(e) => setMediaUrl(e.target.value)}
-              placeholder="Pega el link del contenido aquí"
-              required
+              placeholder="Opcional: link a la canción o fuente"
             />
           </div>
 
