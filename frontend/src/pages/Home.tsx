@@ -3,28 +3,31 @@ import axios from "axios";
 import { Navbar } from "../components/Navbar";
 import { VibeCard } from "../components/VibeCard";
 
-// 1. Definimos qué tiene un Vibe para que TypeScript no sufra
-interface Vibe {
-  id: number;
-  title: string;
-  user: string;
-  img: string;
+interface User {
+  _id: string;        
+  username: string;
+  email: string;
 }
 
 const Home = () => {
-  // 2. Le decimos que el estado es una lista de "Vibes"
-  const [vibes, setVibes] = useState<Vibe[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    const fetchVibes = async () => {
+    const fetchUsers = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/vibes");
-        setVibes(response.data);
+        setLoading(true);
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/users`);
+        setUsers(response.data);
       } catch (error) {
         console.error("Error conectando con el backend:", error);
+        setError("No se pudo cargar la información del servidor.");
+      } finally {
+        setLoading(false);
       }
     };
-    fetchVibes();
+    fetchUsers();
   }, []);
 
   return (
@@ -32,16 +35,24 @@ const Home = () => {
       <Navbar />
       <main className="max-w-7xl mx-auto p-8">
         <header className="mb-8">
-          <h2 className="text-3xl font-semibold text-gray-800">Descubre nuevos Vibes</h2>
-          <p className="text-gray-500">Datos servidos desde tu propio Backend.</p>
+          <h2 className="text-3xl font-semibold text-gray-800">Usuarios Registrados</h2>
         </header>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {/* 3. Ahora ya no necesitas el ": any", TypeScript ya sabe qué es "vibe" */}
-          {vibes.map((vibe) => (
-            <VibeCard key={vibe.id} title={vibe.title} user={vibe.user} image={vibe.img} />
-          ))}
-        </div>
+        {loading && <p className="animate-pulse">Cargando usuarios...</p>}
+        {error && <p className="text-red-500">{error}</p>}
+
+        {!loading && !error && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {users.map((user) => (
+              <VibeCard 
+                key={user._id} 
+                title={user.username} 
+                user={user.email} 
+                image="https://api.dicebear.com/7.x/avataaars/svg?seed=${user.username}"
+              />
+            ))}
+          </div>
+        )}
       </main>
     </div>
   );

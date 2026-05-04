@@ -24,6 +24,30 @@ app.post('/register', async (req, res) => {
     }
 });
 
+app.get('/users', async (req, res) => {
+    try {
+        const usuarios = await User.find(); 
+        res.json(usuarios);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.get('/users/:nombre', async (req, res) => {
+    try {
+        const nombreBusqueda = req.params.nombre;
+        const usuarioEncontrado = await User.findOne({ username: nombreBusqueda });
+
+        if (!usuarioEncontrado) {
+            return res.status(404).json({ mensaje: "Usuario no encontrado" });
+        }
+
+        res.json(usuarioEncontrado);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 mongoose.connect(process.env.MONGO_URI)
     .then(() => {
         console.log(" Conectado a MongoDB y listo para el Paso 11");
