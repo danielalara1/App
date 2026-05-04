@@ -4,7 +4,15 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const dns = require('node:dns');
 
-const User = require('./models/User');
+
+const vibeSchema = new mongoose.Schema({
+    title: String,      
+    category: String,   
+    imageUrl: String,   
+    mediaUrl: String    
+});
+
+const Vibe = mongoose.model('Vibe', vibeSchema);
 
 dns.setDefaultResultOrder('ipv4first');
 const app = express();
@@ -13,36 +21,21 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 5000;
 
-app.post('/register', async (req, res) => {
+app.post('/api/vibes', async (req, res) => {
     try {
-        const { username, email, password } = req.body;
-        const nuevoUsuario = new User({ username, email, password });
-        await nuevoUsuario.save();
-        res.status(201).json({ mensaje: "Usuario registrado con éxito", usuario: nuevoUsuario });
+        const { title, category, imageUrl, mediaUrl } = req.body;
+        const nuevaVibe = new Vibe({ title, category, imageUrl, mediaUrl });
+        await nuevaVibe.save();
+        res.status(201).json({ mensaje: "Vibe creada con éxito", vibe: nuevaVibe });
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
 });
 
-app.get('/users', async (req, res) => {
+app.get('/api/vibes', async (req, res) => {
     try {
-        const usuarios = await User.find(); 
-        res.json(usuarios);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
-app.get('/users/:nombre', async (req, res) => {
-    try {
-        const nombreBusqueda = req.params.nombre;
-        const usuarioEncontrado = await User.findOne({ username: nombreBusqueda });
-
-        if (!usuarioEncontrado) {
-            return res.status(404).json({ mensaje: "Usuario no encontrado" });
-        }
-
-        res.json(usuarioEncontrado);
+        const vibes = await Vibe.find(); 
+        res.json(vibes);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -50,7 +43,7 @@ app.get('/users/:nombre', async (req, res) => {
 
 mongoose.connect(process.env.MONGO_URI)
     .then(() => {
-        console.log(" Conectado a MongoDB y listo para el Paso 11");
-        app.listen(PORT, () => console.log(` Servidor en puerto ${PORT}`));
+        console.log(" Conectado a MongoDB: El motor de Batnie está listo");
+        app.listen(PORT, () => console.log(` Servidor corriendo en puerto ${PORT}`));
     })
-    .catch(err => console.error(" Error:", err.message));
+    .catch(err => console.error(" Error de conexión:", err.message));

@@ -3,52 +3,82 @@ import axios from "axios";
 import { Navbar } from "../components/Navbar";
 import { VibeCard } from "../components/VibeCard";
 
-interface User {
+interface Vibe {
   _id: string;        
-  username: string;
-  email: string;
+  title: string;
+  category: string;
+  imageUrl: string;
+  mediaUrl: string;
 }
 
 const Home = () => {
-  const [users, setUsers] = useState<User[]>([]);
+  const [vibes, setVibes] = useState<Vibe[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchVibes = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/users`);
-        setUsers(response.data);
+        const response = await axios.get("http://localhost:5000/api/vibes");
+       
+        if (response.data.length === 0) {
+          setVibes([{
+            _id: "1",
+            title: "Inspiración Cyberpunk",
+            category: "Dibujo",
+            imageUrl: "https://images.unsplash.com/photo-1614728263952-84ea256f9679?q=80&w=1000",
+            mediaUrl: "https://spotify.com"
+          }]);
+        } else {
+          setVibes(response.data);
+        }
+    
+
       } catch (error) {
         console.error("Error conectando con el backend:", error);
-        setError("No se pudo cargar la información del servidor.");
+        setError("No se pudo conectar con el servidor de Batnie.");
       } finally {
         setLoading(false);
       }
     };
-    fetchUsers();
+    fetchVibes();
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-zinc-950 text-white">
       <Navbar />
       <main className="max-w-7xl mx-auto p-8">
-        <header className="mb-8">
-          <h2 className="text-3xl font-semibold text-gray-800">Usuarios Registrados</h2>
+        <header className="mb-12 text-center">
+          <h2 className="text-5xl font-extrabold tracking-tighter bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent">
+            Batnie
+          </h2>
+          <p className="text-zinc-400 mt-4 uppercase tracking-[0.2em] text-xs font-bold">
+            Creative Hub & Multidisciplinary Ecosystem
+          </p>
         </header>
 
-        {loading && <p className="animate-pulse">Cargando usuarios...</p>}
-        {error && <p className="text-red-500">{error}</p>}
+        {loading && (
+          <div className="flex justify-center">
+            <p className="animate-pulse text-purple-500">Iniciando flujo creativo...</p>
+          </div>
+        )}
+        
+        {error && (
+          <div className="bg-red-500/10 border border-red-500 p-4 rounded-lg text-center">
+            <p className="text-red-500">{error}</p>
+          </div>
+        )}
 
         {!loading && !error && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {users.map((user) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            {vibes.map((vibe) => (
               <VibeCard 
-                key={user._id} 
-                title={user.username} 
-                user={user.email} 
-                image="https://api.dicebear.com/7.x/avataaars/svg?seed=${user.username}"
+                key={vibe._id} 
+                title={vibe.title} 
+                category={vibe.category} 
+                image={vibe.imageUrl}
+                mediaUrl={vibe.mediaUrl}
               />
             ))}
           </div>
