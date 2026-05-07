@@ -63,9 +63,6 @@ const Home = () => {
         <h2 className="text-7xl font-extrabold tracking-tighter bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent animate-fade-in">
           Batnie
         </h2>
-        <p className="text-zinc-400 mt-6 uppercase tracking-[0.3em] text-xs font-bold max-w-md leading-loose">
-          Creative Hub & Multidisciplinary Ecosystem
-        </p>
         
         <button 
           onClick={handleExplore}
