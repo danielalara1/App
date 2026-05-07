@@ -2,11 +2,14 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const dns = require('node:dns');
+
+const app = express(); 
+
 app.use(cors({
   origin: '*' 
 }));
-const dns = require('node:dns');
-
+app.use(express.json());
 
 const vibeSchema = new mongoose.Schema({
     title: String,      
@@ -18,9 +21,6 @@ const vibeSchema = new mongoose.Schema({
 const Vibe = mongoose.model('Vibe', vibeSchema);
 
 dns.setDefaultResultOrder('ipv4first');
-const app = express();
-app.use(cors());
-app.use(express.json());
 
 const PORT = process.env.PORT || 5000;
 
