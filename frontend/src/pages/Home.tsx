@@ -77,18 +77,14 @@ const Home = () => {
     <div className="min-h-screen bg-zinc-950 text-white selection:bg-purple-500/30">
       <Navbar />
       
-      {/* SECCIÓN HERO (PORTADA) */}
       <header className="h-[85vh] flex flex-col items-center justify-center text-center px-4 relative overflow-hidden">
-        {/* Efecto de luz de fondo */}
+
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-purple-600/20 blur-[120px] rounded-full"></div>
         
         <h2 className="text-8xl md:text-9xl font-extrabold tracking-tighter bg-gradient-to-b from-white to-zinc-500 bg-clip-text text-transparent animate-in fade-in zoom-in duration-1000">
           Batnie
         </h2>
         
-        <p className="text-zinc-500 mt-8 uppercase tracking-[0.5em] text-[10px] font-bold">
-          Creative Hub & Multidisciplinary Ecosystem
-        </p>
         
         <button 
           onClick={handleExplore}
@@ -99,7 +95,6 @@ const Home = () => {
         </button>
       </header>
 
-      {/* CONTENIDO PRINCIPAL */}
       <main ref={sectionRef} className="max-w-7xl mx-auto p-8 pt-32 pb-40">
         {loading && (
           <div className="flex justify-center py-20">
