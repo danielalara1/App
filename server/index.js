@@ -44,6 +44,16 @@ app.get('/api/vibes', async (req, res) => {
     }
 });
 
+app.delete('/api/vibes/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        await Vibe.findByIdAndDelete(id);
+        res.json({ mensaje: "Vibe eliminada correctamente" });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 mongoose.connect(process.env.MONGO_URI)
     .then(() => {
         console.log(" Conectado a MongoDB: El motor de Batnie está listo");
