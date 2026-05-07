@@ -59,7 +59,6 @@ const Home = () => {
     <div className="min-h-screen bg-zinc-950 text-white">
       <Navbar />
       
-      {/* SECCIÓN HERO NUEVA */}
       <header className="h-[70vh] flex flex-col items-center justify-center text-center px-4 border-b border-zinc-900">
         <h2 className="text-7xl font-extrabold tracking-tighter bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent animate-fade-in">
           Batnie
