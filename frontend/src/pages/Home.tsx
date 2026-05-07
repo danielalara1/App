@@ -18,13 +18,10 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   
-  // Estado para controlar cuántas imágenes se ven al principio
   const [limit, setLimit] = useState(4); 
-  // Referencia para que el botón "Explore" sepa a dónde bajar
   const sectionRef = useRef<HTMLDivElement>(null);
 
   const handleExplore = () => {
-    // Al pulsar, mostramos "todas" (un número alto) y bajamos la pantalla
     setLimit(100); 
     setTimeout(() => {
       sectionRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -38,7 +35,6 @@ const Home = () => {
         const response = await axios.get(`${API_URL}/api/vibes`);
         
         if (response.data.length === 0) {
-          // Datos de prueba por si la base de datos está vacía
           setVibes([{
             _id: "1",
             title: "Inspiración Cyberpunk",
@@ -67,9 +63,6 @@ const Home = () => {
         <h2 className="text-8xl font-extrabold tracking-tighter bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent">
           Batnie
         </h2>
-        <p className="text-zinc-500 mt-6 uppercase tracking-[0.4em] text-[10px] font-bold">
-          Creative Hub & Multidisciplinary Ecosystem
-        </p>
         
         <button 
           onClick={handleExplore}
