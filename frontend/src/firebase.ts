@@ -2,12 +2,13 @@ import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "TU_API_KEY",
-  authDomain: "TU_AUTH_DOMAIN",
-  projectId: "TU_PROJECT_ID",
-  storageBucket: "TU_STORAGE_BUCKET",
-  messagingSenderId: "TU_MESSAGING_SENDER_ID",
-  appId: "TU_APP_ID"
+  apiKey: "AIzaSyCn2oVjnONyohXR8pw4d46-c23xNwdMfHY",
+  authDomain: "web-app-1aaf4.firebaseapp.com",
+  projectId: "web-app-1aaf4",
+  storageBucket: "web-app-1aaf4.firebasestorage.app",
+  messagingSenderId: "148478761986",
+  appId: "1:148478761986:web:12450d1a61a6c251459b1b",
+  measurementId: "G-JXQNR7D4FP"
 };
 
 const app = initializeApp(firebaseConfig);
