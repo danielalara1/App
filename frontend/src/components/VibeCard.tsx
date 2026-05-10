@@ -9,13 +9,12 @@ interface VibeProps {
   onDelete: (id: string) => void;
 }
 
-export const VibeCard = ({ image, title, category, mediaUrl, id, onDelete }: VibeProps) => {
+export const VibeCard = ({ image, title, category, id, onDelete }: VibeProps) => {
   return (
-    <div className="group relative bg-zinc-900 rounded-xl overflow-hidden border border-zinc-800 transition-all hover:border-purple-500/50 shadow-lg">
+    <div className="group relative bg-zinc-900 rounded-xl overflow-hidden border border-zinc-800 transition-all hover:border-purple-500/50 shadow-lg cursor-zoom-in">
       
       <button 
         onClick={(e) => {
-          e.preventDefault();
           e.stopPropagation(); 
           onDelete(id);
         }}
@@ -24,30 +23,23 @@ export const VibeCard = ({ image, title, category, mediaUrl, id, onDelete }: Vib
         <span className="text-xs font-bold">✕</span>
       </button>
 
-      <a 
-        href={mediaUrl.startsWith('http') ? mediaUrl : `https://${mediaUrl}`} 
-        target="_blank" 
-        rel="noopener noreferrer" 
-        className="block cursor-alias"
-      >
-        <div className="relative h-64 overflow-hidden">
-          <img 
-            src={image} 
-            alt={title} 
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-transparent to-transparent opacity-40"></div>
-        </div>
+       <div className="relative h-64 overflow-hidden">
+        <img 
+          src={image} 
+          alt={title} 
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-transparent to-transparent opacity-40"></div>
+      </div>
 
-        <div className="p-5">
-          <h3 className="font-bold text-white text-lg tracking-tight group-hover:text-purple-400 transition-colors">
-            {title}
-          </h3>
-          <p className="text-xs text-zinc-500 uppercase tracking-widest mt-1 font-medium italic">
-            {category} — <span className="text-purple-500 font-bold italic">Visit Project ↗</span>
-          </p>
-        </div>
-      </a>
+      <div className="p-5">
+        <h3 className="font-bold text-white text-lg tracking-tight group-hover:text-purple-400 transition-colors">
+          {title}
+        </h3>
+        <p className="text-xs text-zinc-500 uppercase tracking-widest mt-1 font-medium italic">
+          {category} — <span className="text-purple-500 font-bold">View detail</span>
+        </p>
+      </div>
     </div>
   );
 };
