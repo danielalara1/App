@@ -16,13 +16,12 @@ interface Vibe {
 const Home = () => {
   const [vibes, setVibes] = useState<Vibe[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
   const [limit, setLimit] = useState(4);
   const sectionRef = useRef<HTMLDivElement>(null);
-
   const [selectedVibe, setSelectedVibe] = useState<Vibe | null>(null);
 
-  const handleExplore = () => {
+  const handleExplore = (e: React.MouseEvent) => {
+    e.preventDefault(); 
     setLimit(100); 
     setTimeout(() => {
       sectionRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -30,14 +29,13 @@ const Home = () => {
   };
 
   const deleteVibe = async (id: string) => {
-    if (window.confirm("¿Seguro que quieres borrar esta pieza?")) {
+    if (window.confirm("¿Seguro que quieres borrar?")) {
       try {
         await axios.delete(`${API_URL}/api/vibes/${id}`);
         setVibes((prev) => prev.filter((v) => v._id !== id));
-        // Si borramos la que está abierta, cerramos el modal
         if (selectedVibe?._id === id) setSelectedVibe(null);
-      } catch (err) {
-        console.error("Error al borrar", err);
+      } catch (err: unknown) {
+        console.error(err);
       }
     }
   };
@@ -45,12 +43,10 @@ const Home = () => {
   useEffect(() => {
     const fetchVibes = async () => {
       try {
-        setLoading(true);
         const response = await axios.get(`${API_URL}/api/vibes`);
         setVibes(response.data);
-      } catch (err) {
-        console.error(err);
-        setError("Error de conexión");
+      } catch (err: unknown) {
+        console.error("Error al cargar", err);
       } finally {
         setLoading(false);
       }
@@ -66,20 +62,25 @@ const Home = () => {
         <h2 className="text-8xl font-extrabold tracking-tighter bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent">
           Batnie
         </h2>
-        <button onClick={handleExplore} className="mt-12 px-8 py-3 border border-purple-500/50 text-purple-400 rounded-full text-[10px] uppercase font-bold tracking-widest hover:bg-purple-500/10 transition-all">
+        <button 
+          onClick={handleExplore} 
+          className="mt-12 px-8 py-3 border border-purple-500/50 text-purple-400 rounded-full text-[10px] uppercase font-bold tracking-widest hover:bg-purple-400/10 transition-all"
+        >
           Explore
         </button>
       </header>
 
-      <main ref={sectionRef} className="max-w-7xl mx-auto p-8 pt-24">
+      <main ref={sectionRef} className="max-w-7xl mx-auto p-8 pt-24 min-h-screen">
         {loading ? (
-           <div className="text-center py-20 text-zinc-500 animate-pulse">Cargando inspiración...</div>
-        ) : error ? (
-           <div className="text-center py-20 text-red-500">{error}</div>
+          <div className="text-center py-20 text-zinc-500">Loading...</div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
             {vibes.slice(0, limit).map((vibe) => (
-              <div key={vibe._id} onClick={() => setSelectedVibe(vibe)}>
+              <div 
+                key={vibe._id} 
+                className="cursor-pointer" 
+                onClick={() => setSelectedVibe(vibe)}
+              >
                 <VibeCard 
                   id={vibe._id}
                   title={vibe.title} 
@@ -94,54 +95,45 @@ const Home = () => {
         )}
       </main>
 
-      {/* MODAL ESTILO PINTEREST */}
       {selectedVibe && (
         <div 
-          className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/95 backdrop-blur-sm transition-all"
+          className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/95 backdrop-blur-sm p-4"
           onClick={() => setSelectedVibe(null)} 
         >
           <div 
-            className="relative max-w-5xl w-full bg-zinc-900 rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row max-h-[90vh]"
+            className="bg-zinc-900 w-full max-w-5xl rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row relative"
             onClick={(e) => e.stopPropagation()} 
           >
-            {/* Imagen Izquierda */}
-            <div className="md:w-2/3 bg-black flex items-center justify-center overflow-hidden">
+            <button 
+              onClick={() => setSelectedVibe(null)}
+              className="absolute top-5 right-5 z-[10000] text-white bg-black/50 w-10 h-10 rounded-full hover:bg-white hover:text-black transition-all flex items-center justify-center"
+            >
+              ✕
+            </button>
+
+            <div className="md:w-2/3 bg-black flex items-center justify-center">
               <img 
                 src={selectedVibe.imageUrl} 
-                alt={selectedVibe.title} 
-                className="max-h-[90vh] w-full object-contain"
+                className="w-full h-full object-contain max-h-[85vh]" 
+                alt={selectedVibe.title}
               />
             </div>
 
-            {/* Info Derecha */}
-            <div className="md:w-1/3 p-8 flex flex-col justify-between bg-zinc-900">
-              <div>
-                <div className="flex justify-end md:justify-start">
-                    <button 
-                    onClick={() => setSelectedVibe(null)}
-                    className="text-zinc-500 hover:text-white mb-6 transition-colors text-sm font-bold uppercase tracking-widest"
-                    >
-                    ✕ Cerrar
-                    </button>
-                </div>
-                <h3 className="text-4xl font-bold text-white mb-2 leading-tight">{selectedVibe.title}</h3>
-                <p className="text-purple-500 font-mono text-xs uppercase tracking-[0.3em] mb-8">{selectedVibe.category}</p>
-                <div className="h-[1px] w-12 bg-zinc-700 mb-8"></div>
-                <p className="text-zinc-400 leading-relaxed text-sm">
-                  Esta pieza ha sido seleccionada para el ecosistema de Batnie. Explora la visión del artista y la narrativa detrás de esta creación única.
-                </p>
-              </div>
-
-              <div className="mt-12">
-                <a 
-                    href={selectedVibe.mediaUrl.startsWith('http') ? selectedVibe.mediaUrl : `https://${selectedVibe.mediaUrl}`} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="block w-full bg-white text-black text-center py-4 rounded-full font-bold hover:bg-zinc-200 transition-all uppercase text-[10px] tracking-widest"
-                >
-                    Visitar Fuente Original ↗
-                </a>
-              </div>
+            <div className="md:w-1/3 p-10 flex flex-col justify-center bg-zinc-900">
+              <h3 className="text-4xl font-bold mb-4 leading-tight">{selectedVibe.title}</h3>
+              <p className="text-purple-500 uppercase tracking-widest text-xs mb-6">{selectedVibe.category}</p>
+              <div className="h-px bg-zinc-800 w-full mb-8"></div>
+              <p className="text-zinc-400 text-sm leading-relaxed mb-10">
+                Esta pieza ha sido seleccionada para el ecosistema de Batnie. Explora la narrativa visual y técnica de esta obra.
+              </p>
+              <a 
+                href={selectedVibe.mediaUrl.startsWith('http') ? selectedVibe.mediaUrl : `https://${selectedVibe.mediaUrl}`} 
+                target="_blank" 
+                rel="noreferrer"
+                className="block w-full bg-white text-black py-4 rounded-full font-bold text-center uppercase text-[10px] tracking-widest hover:bg-zinc-200 transition-all"
+              >
+                Visit Source ↗
+              </a>
             </div>
           </div>
         </div>
