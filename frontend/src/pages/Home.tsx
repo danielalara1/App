@@ -46,7 +46,7 @@ const Home = () => {
         const response = await axios.get(`${API_URL}/api/vibes`);
         setVibes(response.data);
       } catch (err: unknown) {
-        console.error("Error al cargar", err);
+        console.error(err);
       } finally {
         setLoading(false);
       }
@@ -64,21 +64,18 @@ const Home = () => {
         </h2>
         <button 
           onClick={handleExplore} 
-          className="mt-12 px-8 py-3 border border-purple-500/50 text-purple-400 rounded-full text-[10px] uppercase font-bold tracking-widest hover:bg-purple-400/10 transition-all"
+          className="mt-12 px-8 py-3 border border-purple-500/50 text-purple-400 rounded-full text-[10px] uppercase font-bold tracking-widest hover:bg-purple-500/10 transition-all"
         >
           Explore
         </button>
       </header>
 
       <main ref={sectionRef} className="max-w-7xl mx-auto p-8 pt-24 min-h-screen">
-        {loading ? (
-          <div className="text-center py-20 text-zinc-500">Loading...</div>
-        ) : (
+        {!loading && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
             {vibes.slice(0, limit).map((vibe) => (
               <div 
                 key={vibe._id} 
-                className="cursor-pointer" 
                 onClick={() => setSelectedVibe(vibe)}
               >
                 <VibeCard 
@@ -119,7 +116,7 @@ const Home = () => {
               />
             </div>
 
-            <div className="md:w-1/3 p-10 flex flex-col justify-center bg-zinc-900">
+            <div className="md:w-1/3 p-10 flex flex-col justify-center bg-zinc-900 text-left">
               <h3 className="text-4xl font-bold mb-4 leading-tight">{selectedVibe.title}</h3>
               <p className="text-purple-500 uppercase tracking-widest text-xs mb-6">{selectedVibe.category}</p>
               <div className="h-px bg-zinc-800 w-full mb-8"></div>
