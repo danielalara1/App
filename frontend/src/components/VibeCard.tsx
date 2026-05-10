@@ -1,10 +1,10 @@
-import React from 'react';
+
 
 interface VibeProps {
   image: string;
   title: string;
   category: string;
-  mediaUrl: string; // La dejamos aunque no la usemos aquí, para que Home no de error
+  mediaUrl: string; 
   id: string;
   onDelete: (id: string) => void;
 }
@@ -13,10 +13,10 @@ export const VibeCard = ({ image, title, category, id, onDelete }: VibeProps) =>
   return (
     <div className="group relative bg-zinc-900 rounded-xl overflow-hidden border border-zinc-800 transition-all hover:border-purple-500/50 shadow-lg cursor-zoom-in">
       
-      {/* BOTÓN ELIMINAR */}
+
       <button 
         onClick={(e) => {
-          e.stopPropagation(); // Para que no se abra la foto al borrar
+          e.stopPropagation(); 
           onDelete(id);
         }}
         className="absolute top-3 right-3 z-50 bg-red-600 hover:bg-red-700 text-white w-8 h-8 rounded-full flex items-center justify-center shadow-2xl transition-all duration-300 md:opacity-0 md:group-hover:opacity-100"
@@ -24,7 +24,6 @@ export const VibeCard = ({ image, title, category, id, onDelete }: VibeProps) =>
         <span className="text-xs font-bold">✕</span>
       </button>
 
-      {/* IMAGEN Y TEXTO */}
       <div className="relative h-64 overflow-hidden">
         <img 
           src={image} 
