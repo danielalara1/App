@@ -20,8 +20,7 @@ const Home = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [selectedVibe, setSelectedVibe] = useState<Vibe | null>(null);
 
-  const handleExplore = (e: React.MouseEvent) => {
-    e.preventDefault(); 
+  const handleExplore = () => {
     setLimit(100); 
     setTimeout(() => {
       sectionRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -56,7 +55,7 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-zinc-950 text-white">
-      <Navbar />
+      <Navbar onExploreClick={handleExplore} />
       
       <header className="h-[80vh] flex flex-col items-center justify-center text-center px-4">
         <h2 className="text-8xl font-extrabold tracking-tighter bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent">
@@ -120,9 +119,6 @@ const Home = () => {
               <h3 className="text-4xl font-bold mb-4 leading-tight">{selectedVibe.title}</h3>
               <p className="text-purple-500 uppercase tracking-widest text-xs mb-6">{selectedVibe.category}</p>
               <div className="h-px bg-zinc-800 w-full mb-8"></div>
-              <p className="text-zinc-400 text-sm leading-relaxed mb-10">
-                Esta pieza ha sido seleccionada para el ecosistema de Batnie. Explora la narrativa visual y técnica de esta obra.
-              </p>
               <a 
                 href={selectedVibe.mediaUrl.startsWith('http') ? selectedVibe.mediaUrl : `https://${selectedVibe.mediaUrl}`} 
                 target="_blank" 
