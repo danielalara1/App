@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from "react"; 
 import axios from "axios";
+import { auth, loginWithGoogle, logout } from "../firebase";
+import { onAuthStateChanged, type User } from "firebase/auth";
 import { Navbar } from "../components/Navbar";
 import { VibeCard } from "../components/VibeCard";
 
@@ -15,21 +17,36 @@ interface Vibe {
 }
 
 const Home = () => {
+  const [user, setUser] = useState<User | null>(null);
   const [vibes, setVibes] = useState<Vibe[]>([]);
   const [loading, setLoading] = useState(true);
   const [limit, setLimit] = useState(4);
   const [view, setView] = useState<"all" | "mine">("all");
-  const sectionRef = useRef<HTMLDivElement>(null);
   const [selectedVibe, setSelectedVibe] = useState<Vibe | null>(null);
+  const sectionRef = useRef<HTMLDivElement>(null);
 
-  const currentUser = "admin@batnie.com"; 
+  // 1. Efecto para el Usuario (Firebase)
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+    return () => unsubscribe();
+  }, []);
 
-  const handleExplore = () => {
-    setLimit(100); 
-    setTimeout(() => {
-      sectionRef.current?.scrollIntoView({ behavior: "smooth" });
-    }, 100);
-  };
+  // 2. Efecto para cargar los Datos (API)
+  useEffect(() => {
+    const fetchVibes = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/api/vibes`);
+        setVibes(response.data);
+      } catch (err: unknown) {
+        console.error("Error al cargar:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchVibes();
+  }, []);
 
   const deleteVibe = async (id: string) => {
     if (window.confirm("¿Seguro que quieres borrar?")) {
@@ -43,37 +60,39 @@ const Home = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchVibes = async () => {
-      try {
-        const response = await axios.get(`${API_URL}/api/vibes`);
-        setVibes(response.data);
-      } catch (err: unknown) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchVibes();
-  }, []);
+  const handleExplore = () => {
+    setLimit(100); 
+    setTimeout(() => {
+      sectionRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, 100);
+  };
 
   const filteredVibes = view === "all" 
     ? vibes 
-    : vibes.filter(v => v.userEmail === currentUser);
+    : vibes.filter(v => v.userEmail === user?.email);
 
   return (
     <div className="min-h-screen bg-zinc-950 text-white">
-      <Navbar onExploreClick={handleExplore} />
+      <Navbar 
+        onExploreClick={handleExplore} 
+        user={user} 
+        onLogin={loginWithGoogle} 
+        onLogout={logout} 
+      />
       
       <header className="h-[80vh] flex flex-col items-center justify-center text-center px-4">
         <h2 className="text-8xl font-extrabold tracking-tighter bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent">
           Batnie
         </h2>
-        <p className="mt-6 text-zinc-500 tracking-[0.2em] uppercase text-[10px]">Creative Community Hub</p>
+        <button 
+          onClick={handleExplore} 
+          className="mt-12 px-8 py-3 border border-purple-500/50 text-purple-400 rounded-full text-[10px] uppercase font-bold tracking-widest hover:bg-purple-400/10 transition-all"
+        >
+          Explore
+        </button>
       </header>
 
       <main ref={sectionRef} className="max-w-7xl mx-auto p-8 min-h-screen">
-        
         <div className="flex justify-center gap-8 mb-16 border-b border-zinc-900 pb-4">
           <button 
             onClick={() => setView("all")}
@@ -108,20 +127,9 @@ const Home = () => {
       </main>
 
       {selectedVibe && (
-        <div 
-          className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/95 backdrop-blur-sm p-4" 
-          onClick={() => setSelectedVibe(null)}
-        >
-          <div 
-            className="bg-zinc-900 w-full max-w-5xl rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row relative" 
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button 
-              onClick={() => setSelectedVibe(null)} 
-              className="absolute top-5 right-5 z-[10000] text-white bg-black/50 w-10 h-10 rounded-full flex items-center justify-center"
-            >
-              ✕
-            </button>
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/95 backdrop-blur-sm p-4" onClick={() => setSelectedVibe(null)}>
+          <div className="bg-zinc-900 w-full max-w-5xl rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row relative" onClick={(e) => e.stopPropagation()}>
+            <button onClick={() => setSelectedVibe(null)} className="absolute top-5 right-5 z-[10000] text-white bg-black/50 w-10 h-10 rounded-full flex items-center justify-center">✕</button>
             <div className="md:w-2/3 bg-black flex items-center justify-center">
               <img src={selectedVibe.imageUrl} className="w-full h-full object-contain max-h-[85vh]" alt="zoom" />
             </div>
@@ -132,7 +140,7 @@ const Home = () => {
               <a 
                 href={selectedVibe.mediaUrl.startsWith('http') ? selectedVibe.mediaUrl : `https://${selectedVibe.mediaUrl}`} 
                 target="_blank" 
-                rel="noreferrer"
+                rel="noreferrer" 
                 className="block w-full bg-white text-black py-4 rounded-full font-bold text-center uppercase text-[10px] tracking-widest hover:bg-zinc-200 transition-all"
               >
                 Visit Source ↗

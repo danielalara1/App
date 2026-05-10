@@ -1,45 +1,52 @@
+import { type User } from "firebase/auth";
+
 interface NavbarProps {
   onExploreClick?: () => void;
+  user: User | null;
+  onLogin: () => void;
+  onLogout: () => void;
 }
 
-export const Navbar = ({ onExploreClick }: NavbarProps) => {
+export const Navbar = ({ onExploreClick, user, onLogin, onLogout }: NavbarProps) => {
   return (
-    <nav className="fixed top-0 left-0 right-0 z-[50] bg-zinc-950/80 backdrop-blur-md border-b border-zinc-900">
-      <div className="max-w-7xl mx-auto px-8 h-20 flex items-center justify-between">
+    <nav className="fixed top-0 left-0 right-0 z-[50] bg-zinc-950/80 backdrop-blur-md border-b border-zinc-900 px-8 h-20 flex items-center justify-between">
+      <h1 className="text-xl font-black italic tracking-tighter text-white">BATNIE.</h1>
+      
+      <div className="flex items-center gap-6">
+        <button 
+          onClick={onExploreClick} 
+          className="text-[10px] uppercase font-bold text-zinc-400 hover:text-purple-400 transition-colors tracking-widest"
+        >
+          Explore
+        </button>
         
-        <div className="flex items-center gap-2">
-          <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></div>
-          <h1 className="text-xl font-black tracking-tighter italic text-white">
-            BATNIE.
-          </h1>
-        </div>
-        
-        <div className="flex items-center gap-10">
-          <button 
-            onClick={onExploreClick}
-            className="text-[10px] uppercase tracking-[0.3em] font-bold text-zinc-400 hover:text-purple-400 transition-all"
-          >
-            Explore
-          </button>
-          
-          <button className="text-[10px] uppercase tracking-[0.3em] font-bold text-zinc-400 hover:text-white transition-all">
-            About
-          </button>
-
-          <div className="flex items-center gap-3 pl-4 border-l border-zinc-800">
-            <span className="text-[9px] uppercase tracking-widest text-zinc-600 font-medium">Admin</span>
-            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-purple-600 to-pink-600 p-[1px]">
-              <div className="w-full h-full rounded-full bg-zinc-950 flex items-center justify-center overflow-hidden">
-                <img 
-                  src="https://api.dicebear.com/7.x/avataaars/svg?seed=Batnie" 
-                  alt="avatar" 
-                  className="w-full h-full object-cover"
-                />
-              </div>
+        {user ? (
+          <div className="flex items-center gap-4 pl-6 border-l border-zinc-800">
+            <div className="text-right">
+              <p className="text-[10px] text-white font-bold leading-none">
+                {user.displayName || "Usuario"}
+              </p>
+              <button 
+                onClick={onLogout} 
+                className="text-[9px] text-red-500 font-bold uppercase tracking-tighter hover:text-red-400 transition-colors"
+              >
+                Logout
+              </button>
             </div>
+            <img 
+              src={user.photoURL || "https://via.placeholder.com/150"} 
+              alt="profile"
+              className="w-9 h-9 rounded-full border-2 border-purple-500/50 object-cover" 
+            />
           </div>
-        </div>
-
+        ) : (
+          <button 
+            onClick={onLogin} 
+            className="bg-white text-black px-5 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest hover:bg-zinc-200 transition-all shadow-lg shadow-white/5"
+          >
+            Login
+          </button>
+        )}
       </div>
     </nav>
   );
