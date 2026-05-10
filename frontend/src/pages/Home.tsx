@@ -11,14 +11,18 @@ interface Vibe {
   category: string;
   imageUrl: string;
   mediaUrl: string;
+  userEmail?: string; 
 }
 
 const Home = () => {
   const [vibes, setVibes] = useState<Vibe[]>([]);
   const [loading, setLoading] = useState(true);
   const [limit, setLimit] = useState(4);
+  const [view, setView] = useState<"all" | "mine">("all");
   const sectionRef = useRef<HTMLDivElement>(null);
   const [selectedVibe, setSelectedVibe] = useState<Vibe | null>(null);
+
+  const currentUser = "admin@batnie.com"; 
 
   const handleExplore = () => {
     setLimit(100); 
@@ -53,6 +57,10 @@ const Home = () => {
     fetchVibes();
   }, []);
 
+  const filteredVibes = view === "all" 
+    ? vibes 
+    : vibes.filter(v => v.userEmail === currentUser);
+
   return (
     <div className="min-h-screen bg-zinc-950 text-white">
       <Navbar onExploreClick={handleExplore} />
@@ -61,22 +69,30 @@ const Home = () => {
         <h2 className="text-8xl font-extrabold tracking-tighter bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent">
           Batnie
         </h2>
-        <button 
-          onClick={handleExplore} 
-          className="mt-12 px-8 py-3 border border-purple-500/50 text-purple-400 rounded-full text-[10px] uppercase font-bold tracking-widest hover:bg-purple-500/10 transition-all"
-        >
-          Explore
-        </button>
+        <p className="mt-6 text-zinc-500 tracking-[0.2em] uppercase text-[10px]">Creative Community Hub</p>
       </header>
 
-      <main ref={sectionRef} className="max-w-7xl mx-auto p-8 pt-24 min-h-screen">
+      <main ref={sectionRef} className="max-w-7xl mx-auto p-8 min-h-screen">
+        
+        <div className="flex justify-center gap-8 mb-16 border-b border-zinc-900 pb-4">
+          <button 
+            onClick={() => setView("all")}
+            className={`text-[10px] uppercase tracking-widest font-bold transition-all ${view === "all" ? "text-purple-500 border-b border-purple-500" : "text-zinc-600 hover:text-zinc-400"}`}
+          >
+            All Vibes
+          </button>
+          <button 
+            onClick={() => setView("mine")}
+            className={`text-[10px] uppercase tracking-widest font-bold transition-all ${view === "mine" ? "text-purple-500 border-b border-purple-500" : "text-zinc-600 hover:text-zinc-400"}`}
+          >
+            My Uploads
+          </button>
+        </div>
+
         {!loading && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
-            {vibes.slice(0, limit).map((vibe) => (
-              <div 
-                key={vibe._id} 
-                onClick={() => setSelectedVibe(vibe)}
-              >
+            {filteredVibes.slice(0, limit).map((vibe) => (
+              <div key={vibe._id} onClick={() => setSelectedVibe(vibe)}>
                 <VibeCard 
                   id={vibe._id}
                   title={vibe.title} 
@@ -93,30 +109,24 @@ const Home = () => {
 
       {selectedVibe && (
         <div 
-          className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/95 backdrop-blur-sm p-4"
-          onClick={() => setSelectedVibe(null)} 
+          className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/95 backdrop-blur-sm p-4" 
+          onClick={() => setSelectedVibe(null)}
         >
           <div 
-            className="bg-zinc-900 w-full max-w-5xl rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row relative"
-            onClick={(e) => e.stopPropagation()} 
+            className="bg-zinc-900 w-full max-w-5xl rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row relative" 
+            onClick={(e) => e.stopPropagation()}
           >
             <button 
-              onClick={() => setSelectedVibe(null)}
-              className="absolute top-5 right-5 z-[10000] text-white bg-black/50 w-10 h-10 rounded-full hover:bg-white hover:text-black transition-all flex items-center justify-center"
+              onClick={() => setSelectedVibe(null)} 
+              className="absolute top-5 right-5 z-[10000] text-white bg-black/50 w-10 h-10 rounded-full flex items-center justify-center"
             >
               ✕
             </button>
-
             <div className="md:w-2/3 bg-black flex items-center justify-center">
-              <img 
-                src={selectedVibe.imageUrl} 
-                className="w-full h-full object-contain max-h-[85vh]" 
-                alt={selectedVibe.title}
-              />
+              <img src={selectedVibe.imageUrl} className="w-full h-full object-contain max-h-[85vh]" alt="zoom" />
             </div>
-
             <div className="md:w-1/3 p-10 flex flex-col justify-center bg-zinc-900 text-left">
-              <h3 className="text-4xl font-bold mb-4 leading-tight">{selectedVibe.title}</h3>
+              <h3 className="text-4xl font-bold mb-4">{selectedVibe.title}</h3>
               <p className="text-purple-500 uppercase tracking-widest text-xs mb-6">{selectedVibe.category}</p>
               <div className="h-px bg-zinc-800 w-full mb-8"></div>
               <a 
