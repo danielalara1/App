@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react"; 
+import React, { useState, useEffect, useRef } from "react"; 
 import axios from "axios";
 import { auth, loginWithGoogle, logout } from "../firebase";
 import { onAuthStateChanged, type User } from "firebase/auth";
@@ -16,136 +16,107 @@ interface Vibe {
   userEmail?: string; 
 }
 
-const Home = () => {
+const Home: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
   const [vibes, setVibes] = useState<Vibe[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [limit, setLimit] = useState(4);
+  const [loading, setLoading] = useState<boolean>(true);
   const [view, setView] = useState<"all" | "mine">("all");
-  const [selectedVibe, setSelectedVibe] = useState<Vibe | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [newVibe, setNewVibe] = useState({ title: "", category: "", imageUrl: "", mediaUrl: "" });
   const sectionRef = useRef<HTMLDivElement>(null);
 
-  // 1. Efecto para el Usuario (Firebase)
+  // Efecto principal: Carga los datos directamente sin llamadas externas
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => { 
+      setUser(currentUser); 
     });
-    return () => unsubscribe();
-  }, []);
 
-  // 2. Efecto para cargar los Datos (API)
-  useEffect(() => {
-    const fetchVibes = async () => {
+    // Lógica de carga integrada (IIFE)
+    (async () => {
       try {
-        const response = await axios.get(`${API_URL}/api/vibes`);
-        setVibes(response.data);
-      } catch (err: unknown) {
-        console.error("Error al cargar:", err);
+        const { data } = await axios.get(`${API_URL}/api/vibes`);
+        setVibes(data);
+      } catch {
+        console.log("Error loading");
       } finally {
         setLoading(false);
       }
-    };
-    fetchVibes();
-  }, []);
+    })();
 
-  const deleteVibe = async (id: string) => {
-    if (window.confirm("¿Seguro que quieres borrar?")) {
-      try {
-        await axios.delete(`${API_URL}/api/vibes/${id}`);
-        setVibes((prev) => prev.filter((v) => v._id !== id));
-        if (selectedVibe?._id === id) setSelectedVibe(null);
-      } catch (err: unknown) {
-        console.error(err);
-      }
+    return () => unsubscribe();
+  }, []); 
+
+  const handleUpload = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!user) return;
+    try {
+      await axios.post(`${API_URL}/api/vibes`, { ...newVibe, userEmail: user.email });
+      setIsModalOpen(false);
+      setNewVibe({ title: "", category: "", imageUrl: "", mediaUrl: "" });
+      
+      // En lugar de llamar a fetchVibes(), pedimos los datos de nuevo aquí mismo
+      const { data } = await axios.get(`${API_URL}/api/vibes`);
+      setVibes(data);
+    } catch {
+      alert("Error");
     }
   };
 
-  const handleExplore = () => {
-    setLimit(100); 
-    setTimeout(() => {
-      sectionRef.current?.scrollIntoView({ behavior: "smooth" });
-    }, 100);
+  const deleteVibe = async (id: string) => {
+    if (!window.confirm("Delete?")) return;
+    try {
+      await axios.delete(`${API_URL}/api/vibes/${id}`);
+      setVibes((prev) => prev.filter((v) => v._id !== id));
+    } catch {
+      console.log("Error deleting");
+    }
   };
 
-  const filteredVibes = view === "all" 
-    ? vibes 
-    : vibes.filter(v => v.userEmail === user?.email);
+  const filteredVibes = view === "all" ? vibes : vibes.filter(v => v.userEmail === user?.email);
 
   return (
     <div className="min-h-screen bg-zinc-950 text-white">
       <Navbar 
-        onExploreClick={handleExplore} 
-        user={user} 
-        onLogin={loginWithGoogle} 
-        onLogout={logout} 
+        onExploreClick={() => sectionRef.current?.scrollIntoView({ behavior: "smooth" })} 
+        onUploadClick={() => setIsModalOpen(true)} 
+        user={user} onLogin={loginWithGoogle} onLogout={logout} 
       />
       
       <header className="h-[80vh] flex flex-col items-center justify-center text-center px-4">
-        <h2 className="text-8xl font-extrabold tracking-tighter bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent">
-          Batnie
-        </h2>
-        <button 
-          onClick={handleExplore} 
-          className="mt-12 px-8 py-3 border border-purple-500/50 text-purple-400 rounded-full text-[10px] uppercase font-bold tracking-widest hover:bg-purple-400/10 transition-all"
-        >
-          Explore
-        </button>
+        <h2 className="text-8xl font-extrabold tracking-tighter bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent">Batnie</h2>
+        <div className="flex gap-4 mt-12">
+          <button onClick={() => sectionRef.current?.scrollIntoView({ behavior: "smooth" })} className="px-8 py-3 border border-purple-500/50 text-purple-400 rounded-full text-[10px] uppercase font-bold tracking-widest hover:bg-purple-400/10 transition-all">Explore</button>
+          {user && <button onClick={() => setIsModalOpen(true)} className="px-8 py-3 bg-white text-black rounded-full text-[10px] uppercase font-bold tracking-widest hover:bg-zinc-200 transition-all">Upload Vibe</button>}
+        </div>
       </header>
 
       <main ref={sectionRef} className="max-w-7xl mx-auto p-8 min-h-screen">
         <div className="flex justify-center gap-8 mb-16 border-b border-zinc-900 pb-4">
-          <button 
-            onClick={() => setView("all")}
-            className={`text-[10px] uppercase tracking-widest font-bold transition-all ${view === "all" ? "text-purple-500 border-b border-purple-500" : "text-zinc-600 hover:text-zinc-400"}`}
-          >
-            All Vibes
-          </button>
-          <button 
-            onClick={() => setView("mine")}
-            className={`text-[10px] uppercase tracking-widest font-bold transition-all ${view === "mine" ? "text-purple-500 border-b border-purple-500" : "text-zinc-600 hover:text-zinc-400"}`}
-          >
-            My Uploads
-          </button>
+          <button onClick={() => setView("all")} className={`text-[10px] uppercase tracking-widest font-bold ${view === "all" ? "text-purple-500 border-b border-purple-500" : "text-zinc-600"}`}>All Vibes</button>
+          <button onClick={() => setView("mine")} className={`text-[10px] uppercase tracking-widest font-bold ${view === "mine" ? "text-purple-500 border-b border-purple-500" : "text-zinc-600"}`}>My Uploads</button>
         </div>
 
-        {!loading && (
+        {loading ? (
+          <div className="text-center text-zinc-500 uppercase text-[10px] tracking-widest italic">Loading...</div>
+        ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
-            {filteredVibes.slice(0, limit).map((vibe) => (
-              <div key={vibe._id} onClick={() => setSelectedVibe(vibe)}>
-                <VibeCard 
-                  id={vibe._id}
-                  title={vibe.title} 
-                  category={vibe.category} 
-                  image={vibe.imageUrl}
-                  mediaUrl={vibe.mediaUrl}
-                  onDelete={deleteVibe} 
-                />
-              </div>
+            {filteredVibes.map((vibe) => (
+              <VibeCard key={vibe._id} id={vibe._id} title={vibe.title} category={vibe.category} image={vibe.imageUrl} mediaUrl={vibe.mediaUrl} onDelete={deleteVibe} showDelete={!!user && user.email === vibe.userEmail} />
             ))}
           </div>
         )}
       </main>
 
-      {selectedVibe && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/95 backdrop-blur-sm p-4" onClick={() => setSelectedVibe(null)}>
-          <div className="bg-zinc-900 w-full max-w-5xl rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row relative" onClick={(e) => e.stopPropagation()}>
-            <button onClick={() => setSelectedVibe(null)} className="absolute top-5 right-5 z-[10000] text-white bg-black/50 w-10 h-10 rounded-full flex items-center justify-center">✕</button>
-            <div className="md:w-2/3 bg-black flex items-center justify-center">
-              <img src={selectedVibe.imageUrl} className="w-full h-full object-contain max-h-[85vh]" alt="zoom" />
-            </div>
-            <div className="md:w-1/3 p-10 flex flex-col justify-center bg-zinc-900 text-left">
-              <h3 className="text-4xl font-bold mb-4">{selectedVibe.title}</h3>
-              <p className="text-purple-500 uppercase tracking-widest text-xs mb-6">{selectedVibe.category}</p>
-              <div className="h-px bg-zinc-800 w-full mb-8"></div>
-              <a 
-                href={selectedVibe.mediaUrl.startsWith('http') ? selectedVibe.mediaUrl : `https://${selectedVibe.mediaUrl}`} 
-                target="_blank" 
-                rel="noreferrer" 
-                className="block w-full bg-white text-black py-4 rounded-full font-bold text-center uppercase text-[10px] tracking-widest hover:bg-zinc-200 transition-all"
-              >
-                Visit Source ↗
-              </a>
-            </div>
+      {isModalOpen && (
+        <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/80 backdrop-blur-md p-4" onClick={() => setIsModalOpen(false)}>
+          <div className="bg-zinc-900 p-8 rounded-3xl w-full max-w-md border border-zinc-800" onClick={e => e.stopPropagation()}>
+            <form onSubmit={handleUpload} className="flex flex-col gap-4">
+              <input type="text" placeholder="Title" required className="bg-zinc-800 p-3 rounded-xl text-white outline-none" value={newVibe.title} onChange={e => setNewVibe({...newVibe, title: e.target.value})} />
+              <input type="text" placeholder="Category" required className="bg-zinc-800 p-3 rounded-xl text-white outline-none" value={newVibe.category} onChange={e => setNewVibe({...newVibe, category: e.target.value})} />
+              <input type="url" placeholder="Image URL" required className="bg-zinc-800 p-3 rounded-xl text-white outline-none" value={newVibe.imageUrl} onChange={e => setNewVibe({...newVibe, imageUrl: e.target.value})} />
+              <input type="text" placeholder="Source URL" required className="bg-zinc-800 p-3 rounded-xl text-white outline-none" value={newVibe.mediaUrl} onChange={e => setNewVibe({...newVibe, mediaUrl: e.target.value})} />
+              <button type="submit" className="bg-purple-600 py-4 rounded-xl font-bold uppercase text-[10px]">Post Vibe</button>
+            </form>
           </div>
         </div>
       )}

@@ -1,45 +1,32 @@
+import React from 'react';
 
-
-interface VibeProps {
-  image: string;
+export interface VibeCardProps {
+  id: string;
   title: string;
   category: string;
-  mediaUrl: string; 
-  id: string;
+  image: string;
+  mediaUrl: string;
   onDelete: (id: string) => void;
+  showDelete?: boolean;
 }
 
-export const VibeCard = ({ image, title, category, id, onDelete }: VibeProps) => {
+export const VibeCard: React.FC<VibeCardProps> = ({ 
+  id, title, category, image, onDelete, showDelete 
+}) => {
   return (
-    <div className="group relative bg-zinc-900 rounded-xl overflow-hidden border border-zinc-800 transition-all hover:border-purple-500/50 shadow-lg cursor-zoom-in">
-      
-
-      <button 
-        onClick={(e) => {
-          e.stopPropagation(); 
-          onDelete(id);
-        }}
-        className="absolute top-3 right-3 z-50 bg-red-600 hover:bg-red-700 text-white w-8 h-8 rounded-full flex items-center justify-center shadow-2xl transition-all duration-300 md:opacity-0 md:group-hover:opacity-100"
-      >
-        <span className="text-xs font-bold">✕</span>
-      </button>
-
-      <div className="relative h-64 overflow-hidden">
-        <img 
-          src={image} 
-          alt={title} 
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-transparent to-transparent opacity-40"></div>
-      </div>
-
-      <div className="p-5">
-        <h3 className="font-bold text-white text-lg tracking-tight group-hover:text-purple-400 transition-colors">
-          {title}
-        </h3>
-        <p className="text-xs text-zinc-500 uppercase tracking-widest mt-1 font-medium italic">
-          {category} — <span className="text-purple-500 font-bold italic">Ver detalle</span>
-        </p>
+    <div className="relative group bg-zinc-900 rounded-2xl overflow-hidden border border-zinc-800 hover:border-purple-500/50 transition-all cursor-pointer">
+      <img src={image} alt={title} className="w-full aspect-[4/5] object-cover" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity p-6 flex flex-col justify-end">
+        <p className="text-[10px] text-purple-400 font-bold uppercase tracking-widest mb-1">{category}</p>
+        <h3 className="text-lg font-bold text-white">{title}</h3>
+        {showDelete && (
+          <button 
+            onClick={(e) => { e.stopPropagation(); onDelete(id); }}
+            className="mt-4 text-[9px] bg-red-500/20 text-red-500 border border-red-500/50 px-3 py-2 rounded-lg hover:bg-red-500 hover:text-white transition-all uppercase font-bold"
+          >
+            Delete Vibe
+          </button>
+        )}
       </div>
     </div>
   );
