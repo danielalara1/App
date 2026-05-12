@@ -1,19 +1,16 @@
 @import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700;9..40,800&display=swap');
 
-/* ============================================================
-   DESIGN TOKENS
-   ============================================================ */
 :root {
-  /* Surface */
-  --bg:           #09090b;   /* zinc-950 */
-  --bg-card:      #18181b;   /* zinc-900 */
+
+  --bg:           #09090b;   
+  --bg-card:      #18181b;   
   --bg-elevated:  #1c1c1f;
 
   /* Text */
   --text:         #fafafa;
-  --text-subtle:  #71717a;   /* zinc-500 */
-  --text-muted:   #3f3f46;   /* zinc-700 */
+  --text-subtle:  #71717a;  
+  --text-muted:   #3f3f46;   
 
   /* Accent */
   --accent:       #a855f7;   /* purple-500 */
