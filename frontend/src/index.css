@@ -3,7 +3,8 @@
 
 :root {
   --bg: #000000;
-  --accent: #a855f7; /* Morado Batnie */
+  --accent: #a855f7;
+  --accent-glow: rgba(168, 85, 247, 0.4);
 }
 
 body {
@@ -11,107 +12,152 @@ body {
   background-color: var(--bg);
   color: white;
   font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* --- NAVBAR --- */
+/* --- NAVBAR PREMIUM --- */
 .topbar {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  height: 80px;
-  background: rgba(0, 0, 0, 0.9);
+  height: 90px;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(20px);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 40px;
+  padding: 0 50px;
   z-index: 1000;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
 }
 
-/* LOGO CENTRADO */
+/* LOGO: Centrado absoluto y morado con chispa */
 .logo {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
   color: var(--accent) !important;
-  font-weight: 900;
-  letter-spacing: 0.5em;
+  font-size: 1.4rem !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.6em !important;
   text-transform: uppercase;
+  text-shadow: 0 0 20px var(--accent-glow);
+  cursor: pointer;
 }
 
-/* --- ESTA ES LA PARTE QUE BUSCAS --- */
-/* Forzamos que el contenedor de la derecha sea una fila horizontal */
-.nav-right, .user-section, [class*="nav-user"] {
-  display: flex !important;
-  flex-direction: row !important; 
-  align-items: center !important;
-  gap: 20px !important; /* Espacio entre Upload, Nombre y Foto */
+/* SECCIÓN DERECHA: Orden horizontal perfecto */
+.nav-right, [class*="user-section"], [class*="nav-user"] {
   margin-left: auto;
+  display: flex !important;
+  flex-direction: row !important; /* Fuerza la línea */
+  align-items: center !important;
+  gap: 25px; /* Espacio elegante */
 }
 
-/* 1. Botón Upload (a la izquierda de todo) */
-.btn-upload, [class*="upload"] {
-  order: 1 !important;
-  font-size: 14px;
-  font-weight: 500;
-  color: white;
-  background: none;
-  border: none;
-  cursor: pointer;
-}
-
-/* 2. Nombre de usuario (en el medio) */
-.user-name, [class*="display-name"] {
-  order: 2 !important;
-  font-size: 16px;
-  font-weight: 400;
-  color: white;
-  white-space: nowrap;
-}
-
-/* 3. Foto de perfil (a la derecha de todo) */
-.user-avatar, [class*="avatar"] {
-  order: 3 !important;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: 2px solid var(--accent); /* Círculo morado */
-  box-shadow: 0 0 10px rgba(168, 85, 247, 0.4);
-  object-fit: cover;
-  cursor: pointer;
-}
-
-/* --- MARQUITO MORADO EN FOTOS AL PASAR EL RATÓN --- */
-.vibe-card {
-  border: 2px solid transparent;
-  border-radius: 12px;
+/* 1. Botón Upload (a la izquierda del nombre) */
+[class*="upload"], .btn-upload {
+  order: 1;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: rgba(255,255,255,0.6);
   transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+[class*="upload"]:hover {
+  color: var(--accent);
+  text-shadow: 0 0 10px var(--accent-glow);
+}
+
+/* 2. Nombre de usuario (al lado de la foto) */
+.user-name, [class*="display-name"] {
+  order: 2;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: #fff;
+  text-transform: lowercase; /* Estilo daniela lara */
+}
+
+/* 3. Foto de perfil con marco morado y chispa */
+.user-avatar, [class*="avatar"] {
+  order: 3;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  box-shadow: 0 0 15px var(--accent-glow);
+  object-fit: cover;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  cursor: pointer;
+}
+
+.user-avatar:hover {
+  transform: scale(1.1) rotate(5deg);
+}
+
+/* --- GRID Y MARQUITO MORADO --- */
+.vibes-grid {
+  column-count: 2;
+  column-gap: 25px;
+  padding: 140px 40px 100px;
+  max-width: 1800px;
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) { .vibes-grid { column-count: 3; } }
+@media (min-width: 1200px) { .vibes-grid { column-count: 4; } }
+
+.vibe-card {
+  break-inside: avoid;
+  margin-bottom: 25px;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 2px solid transparent;
+  transition: all 0.4s ease;
 }
 
 .vibe-card:hover {
   border-color: var(--accent);
-  box-shadow: 0 0 15px rgba(168, 85, 247, 0.5);
+  box-shadow: 0 0 30px var(--accent-glow);
+  transform: translateY(-10px);
 }
 
-/* --- FORMULARIO CON BOTÓN CERRAR --- */
-.modal-content {
-  background: #111;
-  padding: 30px;
-  border-radius: 20px;
+/* --- FORMULARIO BONITO --- */
+.modal-content, [class*="form-container"] {
+  background: #0a0a0a !important;
+  border-radius: 28px !important;
+  border: 1px solid rgba(168, 85, 247, 0.2) !important;
+  padding: 45px !important;
+  box-shadow: 0 25px 50px rgba(0,0,0,0.5);
   position: relative;
-  border: 1px solid #333;
 }
 
-.btn-close-form {
+/* Botón cerrar del formulario */
+.btn-close, [class*="close-button"] {
   position: absolute;
-  top: 15px;
-  right: 15px;
-  color: #666;
-  font-size: 12px;
-  font-weight: bold;
-  cursor: pointer;
+  top: 25px;
+  right: 25px;
+  font-size: 10px;
+  font-weight: 900;
+  color: #444;
+  text-transform: uppercase;
+  transition: color 0.3s;
 }
 
-.btn-close-form:hover {
-  color: white;
+.btn-close:hover {
+  color: var(--accent);
+}
+
+/* Título principal con degradado suave */
+.main-title {
+  text-align: center;
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  background: linear-gradient(to bottom, #fff 40%, rgba(168, 85, 247, 0.3) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
