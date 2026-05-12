@@ -80,7 +80,7 @@ const Home: React.FC = () => {
       />
       
       <header className="home-header">
-        <h2 className="main-title">Batnie</h2>
+        <h1 className="main-title">Batnie</h1>
         <div className="header-actions">
           <button onClick={() => sectionRef.current?.scrollIntoView({ behavior: "smooth" })} className="btn-secondary">
             Explore

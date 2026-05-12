@@ -14,19 +14,30 @@ export const VibeCard: React.FC<VibeCardProps> = ({
   id, title, category, image, onDelete, showDelete 
 }) => {
   return (
-    <div className="relative group bg-zinc-900 rounded-2xl overflow-hidden border border-zinc-800 hover:border-purple-500/50 transition-all cursor-pointer">
-      <img src={image} alt={title} className="w-full aspect-[4/5] object-cover" />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity p-6 flex flex-col justify-end">
-        <p className="text-[10px] text-purple-400 font-bold uppercase tracking-widest mb-1">{category}</p>
-        <h3 className="text-lg font-bold text-white">{title}</h3>
-        {showDelete && (
-          <button 
-            onClick={(e) => { e.stopPropagation(); onDelete(id); }}
-            className="mt-4 text-[9px] bg-red-500/20 text-red-500 border border-red-500/50 px-3 py-2 rounded-lg hover:bg-red-500 hover:text-white transition-all uppercase font-bold"
-          >
-            Delete Vibe
-          </button>
-        )}
+    <div className="vibe-card-container">
+      <div className="vibe-card-image-wrapper">
+        <img src={image} alt={title} className="vibe-card-image" />
+        
+        <div className="vibe-card-overlay">
+          <div className="flex justify-end">
+            {showDelete && (
+              <button 
+                onClick={(e) => { e.stopPropagation(); onDelete(id); }}
+                className="btn-action-float bg-red-600 hover:bg-red-700"
+              >
+                Delete
+              </button>
+            )}
+          </div>
+          
+          <div className="overlay-bottom-text">
+            <p className="text-[10px] text-white/80 font-bold uppercase tracking-widest">{category}</p>
+          </div>
+        </div>
+      </div>
+      
+      <div className="vibe-card-info">
+        <h3 className="vibe-card-title">{title}</h3>
       </div>
     </div>
   );
