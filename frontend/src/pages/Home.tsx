@@ -51,7 +51,6 @@ const Home: React.FC = () => {
       await axios.post(`${API_URL}/api/vibes`, { ...newVibe, userEmail: user.email });
       setIsModalOpen(false);
       setNewVibe({ title: "", category: "", imageUrl: "", mediaUrl: "" });
-      
       const { data } = await axios.get(`${API_URL}/api/vibes`);
       setVibes(data);
     } catch {
@@ -64,15 +63,12 @@ const Home: React.FC = () => {
       alert("No tienes permiso para eliminar esta publicación.");
       return;
     }
-
     if (!window.confirm("¿Estás seguro de que quieres eliminar esta publicación?")) return;
-    
     try {
       await axios.delete(`${API_URL}/api/vibes/${id}`);
       setVibes((prev) => prev.filter((v) => v._id !== id));
     } catch {
       console.error("Error al eliminar");
-      alert("Hubo un error al intentar eliminar la publicación.");
     }
   };
 
@@ -83,28 +79,14 @@ const Home: React.FC = () => {
       <Navbar 
         onExploreClick={() => sectionRef.current?.scrollIntoView({ behavior: "smooth" })} 
         onUploadClick={() => setIsModalOpen(true)} 
-        user={user} onLogin={loginWithGoogle} onLogout={logout} 
+        user={user} 
+        onLogin={loginWithGoogle} 
+        onLogout={logout} 
       />
       
-      <header className="home-header">
+      {/* El margen superior (pt-24) es para que el Navbar fixed no tape el título */}
+      <header className="home-header pt-24">
         <h1 className="main-title">Batnie</h1>
-        <div className="header-actions">
-          <button 
-            onClick={() => sectionRef.current?.scrollIntoView({ behavior: "smooth" })} 
-            className="btn-secondary"
-          >
-            Explore
-          </button>
-           {!user ? (
-            <button onClick={loginWithGoogle} className="btn-primary">
-              Entrar para publicar
-            </button>
-          ) : (
-            <button onClick={() => setIsModalOpen(true)} className="btn-primary">
-              Upload Vibe
-            </button>
-          )}
-        </div>
       </header>
 
       <main ref={sectionRef} className="content-main">
