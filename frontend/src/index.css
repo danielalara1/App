@@ -1,98 +1,189 @@
-/* index.css */
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap');
 
-/* ... (mantén tus variables de colores y fuentes anteriores) ... */
+:root {
+  --bg: #ffffff;
+  --bg-hover: #f0f0f0;
+  --text: #111111;
+  --text-subtle: #767676;
+  --accent: #e60023; /* Rojo Pinterest */
+  --border: #efefef;
+  --radius: 16px;
+  --sans: 'DM Sans', sans-serif;
+}
 
-/* Contenedor principal estilo tablero */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #000000;
+    --bg-hover: #1a1a1a;
+    --text: #ffffff;
+    --text-subtle: #a5a5a5;
+    --border: #262626;
+  }
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* --- Layout Estilo Tablero --- */
 .content-main {
-  padding: 20px;
-  max-width: 1600px;
-  margin: 0 auto;
+  padding: 0 16px;
+  max-width: 100%;
 }
 
-/* Sistema Masonry (Pinterest) */
 .vibes-grid {
-  column-count: 2; /* 2 columnas en móvil */
+  column-count: 2;
   column-gap: 16px;
-  width: 100%;
 }
 
-@media (min-width: 768px) {
-  .vibes-grid { column-count: 3; }
-}
+@media (min-width: 750px) { .vibes-grid { column-count: 3; } }
+@media (min-width: 1100px) { .vibes-grid { column-count: 4; } }
+@media (min-width: 1400px) { .vibes-grid { column-count: 5; } }
+@media (min-width: 1800px) { .vibes-grid { column-count: 6; } }
 
-@media (min-width: 1024px) {
-  .vibes-grid { column-count: 4; }
-}
-
-@media (min-width: 1280px) {
-  .vibes-grid { column-count: 5; }
-}
-
-/* La tarjeta (VibeCard) */
+/* --- Tarjeta Pinterest --- */
 .vibe-card-container {
-  break-inside: avoid; /* Evita que la tarjeta se parta entre columnas */
-  margin-bottom: 16px;
-  position: relative;
-  cursor: zoom-in;
+  break-inside: avoid;
+  margin-bottom: 20px;
 }
 
 .vibe-card-image-wrapper {
   position: relative;
-  border-radius: 16px; /* Muy redondeado como Pinterest */
+  border-radius: var(--radius);
   overflow: hidden;
-  background-color: var(--bg-elevated);
+  cursor: zoom-in;
+  background-color: var(--bg-hover);
 }
 
 .vibe-card-image {
   width: 100%;
+  height: auto;
   display: block;
-  transition: filter 0.3s ease;
-}
-
-/* Efecto Hover estilo Pinterest */
-.vibe-card-container:hover .vibe-card-image {
-  filter: brightness(0.8);
+  transition: transform 0.5s ease;
 }
 
 .vibe-card-overlay {
   position: absolute;
   inset: 0;
+  background: rgba(0, 0, 0, 0.25);
   opacity: 0;
+  transition: opacity 0.3s ease;
+  padding: 12px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 12px;
-  transition: opacity 0.3s ease;
-  background: linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, transparent 40%, rgba(0,0,0,0.4) 100%);
 }
 
 .vibe-card-container:hover .vibe-card-overlay {
   opacity: 1;
 }
 
-/* Detalles debajo de la imagen */
+.vibe-card-container:hover .vibe-card-image {
+  transform: scale(1.05);
+}
+
+/* --- Info de la Tarjeta --- */
 .vibe-card-info {
   padding: 8px 4px;
 }
 
 .vibe-card-title {
   font-size: 14px;
-  font-weight: 600;
-  color: var(--text-h);
+  font-weight: 700;
   margin: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  color: var(--text);
 }
 
-/* Botón de Guardar/Delete flotante */
+/* --- Botones Flotantes --- */
 .btn-action-float {
-  align-self: flex-end;
+  background-color: var(--accent);
+  color: white;
+  padding: 12px 18px;
+  border-radius: 24px;
+  font-size: 14px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+}
+
+/* --- Header y Filtros --- */
+.home-header {
+  text-align: center;
+  padding: 40px 0;
+}
+
+.main-title {
+  font-size: 40px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.view-selector {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 30px;
+}
+
+.view-selector button {
+  background: transparent;
+  border: none;
+  padding: 12px 16px;
+  border-radius: 24px;
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.view-selector button.active {
+  background-color: var(--text);
+  color: var(--bg);
+}
+
+/* --- Modal Minimalista --- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: var(--bg);
+  padding: 30px;
+  border-radius: 32px;
+  width: 90%;
+  max-width: 480px;
+}
+
+.upload-form input {
+  width: 100%;
+  border: 2px solid var(--border);
+  padding: 14px;
+  border-radius: 16px;
+  margin-bottom: 12px;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 16px;
+}
+
+.btn-submit {
+  width: 100%;
   background: var(--accent);
   color: white;
-  padding: 8px 16px;
-  border-radius: 100px;
-  font-weight: 600;
-  font-size: 14px;
+  padding: 14px;
+  border-radius: 24px;
+  font-weight: 700;
   border: none;
+  font-size: 16px;
 }
