@@ -59,13 +59,20 @@ const Home: React.FC = () => {
     }
   };
 
-  const deleteVibe = async (id: string) => {
-    if (!window.confirm("Delete?")) return;
+  const deleteVibe = async (id: string, vibeEmail?: string) => {
+    if (!user || user.email !== vibeEmail) {
+      alert("No tienes permiso para eliminar esta publicación.");
+      return;
+    }
+
+    if (!window.confirm("¿Estás seguro de que quieres eliminar esta publicación?")) return;
+    
     try {
       await axios.delete(`${API_URL}/api/vibes/${id}`);
       setVibes((prev) => prev.filter((v) => v._id !== id));
     } catch {
-      console.error("Error deleting");
+      console.error("Error al eliminar");
+      alert("Hubo un error al intentar eliminar la publicación.");
     }
   };
 
@@ -82,10 +89,17 @@ const Home: React.FC = () => {
       <header className="home-header">
         <h1 className="main-title">Batnie</h1>
         <div className="header-actions">
-          <button onClick={() => sectionRef.current?.scrollIntoView({ behavior: "smooth" })} className="btn-secondary">
+          <button 
+            onClick={() => sectionRef.current?.scrollIntoView({ behavior: "smooth" })} 
+            className="btn-secondary"
+          >
             Explore
           </button>
-          {user && (
+           {!user ? (
+            <button onClick={loginWithGoogle} className="btn-primary">
+              Entrar para publicar
+            </button>
+          ) : (
             <button onClick={() => setIsModalOpen(true)} className="btn-primary">
               Upload Vibe
             </button>
@@ -95,16 +109,24 @@ const Home: React.FC = () => {
 
       <main ref={sectionRef} className="content-main">
         <div className="view-selector">
-          <button onClick={() => setView("all")} className={view === "all" ? "active" : ""}>
+          <button 
+            onClick={() => setView("all")} 
+            className={view === "all" ? "active" : ""}
+          >
             All Vibes
           </button>
-          <button onClick={() => setView("mine")} className={view === "mine" ? "active" : ""}>
-            My Uploads
-          </button>
+          {user && (
+            <button 
+              onClick={() => setView("mine")} 
+              className={view === "mine" ? "active" : ""}
+            >
+              My Uploads
+            </button>
+          )}
         </div>
 
         {loading ? (
-          <div className="loader">Loading...</div>
+          <div className="loader">Loading vibes...</div>
         ) : (
           <div className="vibes-grid">
             {filteredVibes.map((vibe) => (
@@ -115,7 +137,7 @@ const Home: React.FC = () => {
                 category={vibe.category} 
                 image={vibe.imageUrl} 
                 mediaUrl={vibe.mediaUrl} 
-                onDelete={deleteVibe} 
+                onDelete={() => deleteVibe(vibe._id, vibe.userEmail)} 
                 showDelete={!!user && user.email === vibe.userEmail} 
               />
             ))}
@@ -126,6 +148,7 @@ const Home: React.FC = () => {
       {isModalOpen && (
         <div className="modal-overlay" onClick={() => setIsModalOpen(false)}>
           <div className="modal-content" onClick={e => e.stopPropagation()}>
+            <h2 className="modal-title">New Vibe</h2>
             <form onSubmit={handleUpload} className="upload-form">
               <input type="text" placeholder="Title" required value={newVibe.title} onChange={e => setNewVibe({...newVibe, title: e.target.value})} />
               <input type="text" placeholder="Category" required value={newVibe.category} onChange={e => setNewVibe({...newVibe, category: e.target.value})} />
