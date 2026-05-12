@@ -2,8 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { auth, loginWithGoogle, logout } from "../firebase";
 import { onAuthStateChanged, type User } from "firebase/auth";
-import { Navbar } from "../components/Navbar";
-import { VibeCard } from "../components/VibeCard";
 
 const API_URL = 'https://8wlzgqn7-5000.uks1.devtunnels.ms'; 
 
@@ -22,6 +20,7 @@ const Home: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [view, setView] = useState<"all" | "mine">("all");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null); // Para el zoom
   const [newVibe, setNewVibe] = useState({ title: "", category: "", imageUrl: "", mediaUrl: "" });
   const sectionRef = useRef<HTMLDivElement>(null);
 
@@ -76,16 +75,32 @@ const Home: React.FC = () => {
 
   return (
     <div className="home-container">
-      <Navbar 
-        onExploreClick={() => sectionRef.current?.scrollIntoView({ behavior: "smooth" })} 
-        onUploadClick={() => setIsModalOpen(true)} 
-        user={user} 
-        onLogin={loginWithGoogle} 
-        onLogout={logout} 
-      />
+      {/* NAVBAR INTEGRADA: Foto de usuario arriba derecha */}
+      <nav className="topbar">
+        <div className="logo" onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})}>
+          BATNIE.
+        </div>
+        
+        <div className="flex items-center gap-6">
+          {user ? (
+            <div className="flex items-center gap-4">
+              <button className="btn-primary" onClick={() => setIsModalOpen(true)}>+ Upload</button>
+              <div className="user-profile" onClick={logout} title="Click to Logout">
+                <span className="user-name-small">{user.displayName || user.email?.split('@')[0]}</span>
+                <img 
+                  src={user.photoURL || `https://ui-avatars.com/api/?name=${user.email}&background=a855f7&color=fff`} 
+                  alt="profile" 
+                  className="user-avatar"
+                />
+              </div>
+            </div>
+          ) : (
+            <button className="btn-primary" onClick={loginWithGoogle}>Login</button>
+          )}
+        </div>
+      </nav>
       
-      {/* El margen superior (pt-24) es para que el Navbar fixed no tape el título */}
-      <header className="home-header pt-24">
+      <header className="home-header">
         <h1 className="main-title">Batnie</h1>
       </header>
 
@@ -102,41 +117,63 @@ const Home: React.FC = () => {
               onClick={() => setView("mine")} 
               className={view === "mine" ? "active" : ""}
             >
-              My Uploads
+              My Collection
             </button>
           )}
         </div>
 
         {loading ? (
-          <div className="loader">Loading vibes...</div>
+          <div className="loader">Loading Gallery...</div>
         ) : (
           <div className="vibes-grid">
             {filteredVibes.map((vibe) => (
-              <VibeCard 
+              <div 
                 key={vibe._id} 
-                id={vibe._id} 
-                title={vibe.title} 
-                category={vibe.category} 
-                image={vibe.imageUrl} 
-                mediaUrl={vibe.mediaUrl} 
-                onDelete={() => deleteVibe(vibe._id, vibe.userEmail)} 
-                showDelete={!!user && user.email === vibe.userEmail} 
-              />
+                className="vibe-card"
+                onClick={() => setSelectedImage(vibe.imageUrl)} // Zoom al hacer click
+              >
+                <img src={vibe.imageUrl} alt={vibe.title} loading="lazy" />
+                <div className="vibe-info">
+                  <p>{vibe.category}</p>
+                  <h3>{vibe.title}</h3>
+                  {user?.email === vibe.userEmail && (
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation(); // Evita que se abra el zoom al borrar
+                        deleteVibe(vibe._id, vibe.userEmail);
+                      }}
+                      className="text-red-500 text-[9px] mt-2 uppercase font-bold tracking-widest"
+                    >
+                      Delete
+                    </button>
+                  )}
+                </div>
+              </div>
             ))}
           </div>
         )}
       </main>
 
+      {/* MODAL DE ZOOM (Style Pinterest) */}
+      {selectedImage && (
+        <div className="zoom-overlay" onClick={() => setSelectedImage(null)}>
+          <div className="expanded-container">
+            <img src={selectedImage} className="expanded-img" alt="zoom view" />
+          </div>
+        </div>
+      )}
+
+      {/* MODAL DE SUBIDA */}
       {isModalOpen && (
         <div className="modal-overlay" onClick={() => setIsModalOpen(false)}>
           <div className="modal-content" onClick={e => e.stopPropagation()}>
-            <h2 className="modal-title">New Vibe</h2>
+            <h2 className="text-white text-center mb-6 font-bold uppercase tracking-widest text-sm">New Vibe</h2>
             <form onSubmit={handleUpload} className="upload-form">
               <input type="text" placeholder="Title" required value={newVibe.title} onChange={e => setNewVibe({...newVibe, title: e.target.value})} />
               <input type="text" placeholder="Category" required value={newVibe.category} onChange={e => setNewVibe({...newVibe, category: e.target.value})} />
               <input type="url" placeholder="Image URL" required value={newVibe.imageUrl} onChange={e => setNewVibe({...newVibe, imageUrl: e.target.value})} />
               <input type="text" placeholder="Source URL" required value={newVibe.mediaUrl} onChange={e => setNewVibe({...newVibe, mediaUrl: e.target.value})} />
-              <button type="submit" className="btn-submit">Post Vibe</button>
+              <button type="submit" className="btn-submit">Post to Gallery</button>
             </form>
           </div>
         </div>
