@@ -4,7 +4,7 @@
 :root {
   --bg: #000000;
   --accent: #a855f7; /* Morado Batnie */
-  --glow: rgba(168, 85, 247, 0.5);
+  --glow: rgba(168, 85, 247, 0.4);
 }
 
 body {
@@ -15,7 +15,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* --- NAVBAR: DISTRIBUCIÓN --- */
+/* --- NAVBAR: DISTRIBUCIÓN EN LÍNEA --- */
 .topbar {
   position: fixed;
   top: 0;
@@ -26,7 +26,8 @@ body {
   backdrop-filter: blur(20px);
   display: flex;
   align-items: center;
-  padding: 0 50px;
+  justify-content: space-between;
+  padding: 0 40px;
   z-index: 1000;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
@@ -41,156 +42,126 @@ body {
   font-weight: 900 !important;
   letter-spacing: 0.5em !important;
   text-transform: uppercase;
-  text-shadow: 0 0 20px var(--glow);
+  text-shadow: 0 0 15px var(--glow);
 }
 
-/* Contenedor de usuario a la derecha */
-.nav-right, .user-section, [class*="user-container"] {
+/* Contenedor derecho: Todo en una fila */
+.nav-right, [class*="user-section"], [class*="nav-user"] {
   margin-left: auto;
   display: flex;
-  align-items: center;
-  gap: 15px;
+  flex-direction: row !important; /* Fuerza que sea horizontal */
+  align-items: center !important;
+  gap: 20px; /* Espacio entre Upload, Nombre y Foto */
 }
 
-/* Nombre del usuario */
-.user-name, [class*="display-name"] {
+/* Botón Upload a la izquierda del nombre */
+[class*="upload"], .btn-upload {
+  order: 1; /* Primero */
   font-size: 11px;
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 1px;
-  color: #efefef;
+  color: white;
+  cursor: pointer;
+  background: none;
+  border: none;
+  transition: color 0.3s;
 }
 
-/* Foto de perfil con chispa */
-.user-avatar {
-  width: 42px;
-  height: 42px;
+[class*="upload"]:hover {
+  color: var(--accent);
+}
+
+/* Nombre al lado de la foto */
+.user-name, [class*="display-name"], [class*="user-info"] p {
+  order: 2; /* Segundo */
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: lowercase; /* Como en tu foto */
+  color: white;
+  margin: 0 !important;
+}
+
+/* Foto de perfil con chispa morada */
+.user-avatar, [class*="avatar"] {
+  order: 3; /* Tercero */
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   border: 2px solid var(--accent);
   box-shadow: 0 0 15px var(--glow);
   cursor: pointer;
-  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  object-fit: cover;
+  transition: transform 0.3s;
 }
 
 .user-avatar:hover {
   transform: scale(1.1);
 }
 
-/* --- MENÚ DESPLEGABLE (Al pulsar la foto) --- */
-.dropdown-menu, .profile-menu, [class*="dropdown"] {
+/* --- DROPDOWN (Menú al pulsar la foto) --- */
+[class*="dropdown"], .profile-menu {
   position: absolute;
-  top: 75px;
-  right: 40px;
-  background: #0d0d0d;
-  border: 1px solid rgba(168, 85, 247, 0.3);
-  border-radius: 14px;
-  width: 190px;
+  top: 70px;
+  right: 0;
+  background: #111;
+  border: 1px solid rgba(168, 85, 247, 0.2);
+  border-radius: 12px;
+  width: 170px;
   overflow: hidden;
-  box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.8);
 }
 
-.menu-option, .menu-item {
-  padding: 14px 20px;
+.menu-item {
+  padding: 12px 20px;
   font-size: 10px;
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 1px;
-  color: #fff;
   cursor: pointer;
-  transition: background 0.3s;
+  color: #eee;
 }
 
-.menu-option:hover {
+.menu-item:hover {
   background: var(--accent);
+  color: white;
 }
 
-/* --- GRID Y MARQUITO MORADO --- */
-.vibes-grid, [class*="grid-container"] {
-  column-count: 2;
-  column-gap: 25px;
-  padding: 140px 40px 100px;
-  max-width: 1800px;
-  margin: 0 auto;
-}
-
-@media (min-width: 768px) { .vibes-grid { column-count: 3; } }
-@media (min-width: 1200px) { .vibes-grid { column-count: 4; } }
-
+/* --- MARQUITO MORADO EN GALERÍA --- */
 .vibe-card {
-  break-inside: avoid;
-  margin-bottom: 25px;
-  border-radius: 16px;
-  overflow: hidden;
   border: 2px solid transparent;
-  transition: all 0.4s ease;
-  cursor: zoom-in;
+  transition: 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 20px;
 }
 
 .vibe-card:hover {
   border-color: var(--accent);
-  box-shadow: 0 0 25px var(--glow);
-  transform: translateY(-8px);
-}
-
-.vibe-card img {
-  width: 100%;
-  display: block;
-}
-
-/* --- ZOOM PINTEREST (Scroll infinito abajo) --- */
-.zoom-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.98);
-  z-index: 2000;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 100px 20px;
-}
-
-.expanded-img {
-  max-width: 850px;
-  width: 95%;
-  border-radius: 24px;
-  margin-bottom: 60px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+  box-shadow: 0 0 20px var(--glow);
+  transform: translateY(-5px);
 }
 
 /* --- FORMULARIO (MODAL) --- */
-.modal-overlay {
-  background: rgba(0, 0, 0, 0.95);
-  backdrop-filter: blur(10px);
-}
-
-.modal-content, [class*="form-container"] {
+.modal-content {
   background: #0a0a0a !important;
-  border: 1px solid rgba(168, 85, 247, 0.2) !important;
   border-radius: 24px !important;
+  border: 1px solid rgba(168, 85, 247, 0.2) !important;
   padding: 40px !important;
   position: relative;
 }
 
-/* Botón cerrar formulario */
-.btn-close, [class*="close-button"] {
+.btn-close {
   position: absolute;
   top: 20px;
   right: 20px;
-  color: #555;
   font-size: 10px;
   font-weight: 900;
-  text-transform: uppercase;
-  background: none;
-  border: none;
+  color: #555;
   cursor: pointer;
 }
 
-.btn-close:hover {
-  color: var(--accent);
-}
+.btn-close:hover { color: var(--accent); }
 
-/* Título principal con degradado */
+/* Título de fondo */
 .main-title {
   text-align: center;
   font-weight: 800;
