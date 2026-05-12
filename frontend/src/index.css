@@ -1,132 +1,94 @@
 @import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
 
+/* --- 1. VARIABLES Y BASE --- */
 :root {
   --bg: #000000;
-  --accent: #a855f7; /* Morado Batnie */
+  --accent: #a855f7; /* El morado que querías */
 }
 
 body {
-  margin: 0;
   background-color: var(--bg);
   color: white;
   font-family: 'Inter', sans-serif;
-  -webkit-font-smoothing: antialiased;
 }
 
-/* --- NAVBAR CON LOGO CENTRAL --- */
-.topbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 80px;
-  background: rgba(0,0,0,0.8);
-  backdrop-filter: blur(20px);
-  display: grid;
-  grid-template-columns: 1fr auto 1fr; /* Esto centra el logo perfectamente */
-  align-items: center;
-  padding: 0 40px;
-  z-index: 1000;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
-}
-
+/* --- 2. LOGO CENTRAL MORADO --- */
+/* Forzamos que el logo sea morado y esté centrado */
 .logo {
-  grid-column: 2; /* Logo al centro */
-  font-size: 1.2rem;
-  font-weight: 900;
-  letter-spacing: 0.5em;
+  color: var(--accent) !important; 
+  font-weight: 900 !important;
+  letter-spacing: 0.5em !important;
   text-transform: uppercase;
-  color: var(--accent) !important; /* Logo Morado */
-  cursor: pointer;
 }
 
-.user-section {
-  grid-column: 3; /* Usuario a la derecha */
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 15px;
-}
-
-.user-avatar {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  border: 2px solid var(--accent);
-  object-fit: cover;
-}
-
-/* --- GRID Y MARCO MORADO --- */
-.vibes-grid {
-  column-count: 2;
-  column-gap: 20px;
-  padding: 0 30px 100px;
-  max-width: 1800px;
-  margin: 0 auto;
-}
-
-@media (min-width: 768px) { .vibes-grid { column-count: 3; } }
-@media (min-width: 1200px) { .vibes-grid { column-count: 4; } }
-
+/* --- 3. MARQUITO MORADO EN LAS IMÁGENES --- */
+/* Este efecto se aplica cuando pasas el ratón sobre cualquier tarjeta de imagen */
 .vibe-card {
-  break-inside: avoid;
-  margin-bottom: 20px;
+  border: 2px solid transparent; /* Marco invisible por defecto */
+  transition: all 0.3s ease-in-out;
   border-radius: 12px;
   overflow: hidden;
-  border: 2px solid transparent; /* Marco invisible */
-  transition: all 0.3s ease;
-  cursor: zoom-in;
 }
 
 .vibe-card:hover {
-  border-color: var(--accent); /* MARQUITO MORADO AL PASAR EL RATÓN */
-  box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
+  border-color: var(--accent); /* El marco se vuelve morado */
+  box-shadow: 0 0 15px rgba(168, 85, 247, 0.4); /* Un pequeño brillo */
   transform: translateY(-5px);
 }
 
-.vibe-card img {
-  width: 100%;
-  display: block;
-}
-
-/* --- MODAL PINTEREST --- */
+/* --- 4. DISEÑO TIPO PINTEREST (MODAL) --- */
+/* Ajustamos el modal para que se comporte como Pinterest al hacer click */
 .zoom-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.98);
-  z-index: 2000;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 100px 20px;
+  background: rgba(0, 0, 0, 0.98) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  overflow-y: auto !important; /* Permite scroll para ver las fotos de abajo */
+  padding-top: 80px;
 }
 
 .expanded-img {
-  max-width: 800px;
-  width: 100%;
+  max-width: 800px !important;
+  width: 90% !important;
   border-radius: 20px;
   margin-bottom: 50px;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
 }
 
-.related-title {
-  color: var(--accent);
+/* Esto asegura que la galería que aparece dentro del modal mantenga el orden */
+.zoom-overlay .vibes-grid {
+  width: 100%;
+  max-width: 1400px;
+  margin-top: 20px;
+}
+
+/* --- 5. INTERFAZ DE USUARIO (DERECHA) --- */
+/* Estilizamos el área del usuario para que se vea premium */
+.user-avatar {
+  border: 2px solid var(--accent) !important;
+}
+
+.btn-primary, .btn-nav {
+  background-color: white !important;
+  color: black !important;
+  font-weight: 800 !important;
   text-transform: uppercase;
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 0.3em;
-  margin-bottom: 30px;
-}
-
-/* BOTÓN SUBIR NAV */
-.btn-nav {
-  background: white;
-  color: black;
-  padding: 8px 15px;
-  border-radius: 6px;
   font-size: 10px;
+  letter-spacing: 1px;
+  border-radius: 6px;
+  padding: 8px 16px !important;
+  transition: 0.3s;
+}
+
+.btn-primary:hover, .btn-nav:hover {
+  background-color: var(--accent) !important;
+  color: white !important;
+}
+
+/* Título principal con degradado elegante */
+.main-title {
+  background: linear-gradient(to bottom, #fff, transparent);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   font-weight: 800;
-  text-transform: uppercase;
 }
