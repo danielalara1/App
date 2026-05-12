@@ -1,12 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800&display=swap');
 
 :root {
-  --bg: #050507;
-  --card-bg: #111115;
-  --text-main: #ffffff;
-  --text-dim: #71717a;
+  --bg: #050505;
+  --card-bg: #111111;
   --accent: #a855f7;
-  --gradient: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+  --text-secondary: #71717a;
+  --nav-h: 60px;
 }
 
 * {
@@ -17,87 +16,78 @@
 
 body {
   background-color: var(--bg);
-  color: var(--text-main);
+  color: white;
   font-family: 'DM Sans', sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
-/* --- NAVBAR (Fina y fija) --- */
+/* --- NAVBAR SUPER FINA --- */
 .topbar {
   position: fixed;
   top: 0;
   width: 100%;
-  height: 65px;
-  background: rgba(5, 5, 7, 0.8);
-  backdrop-filter: blur(20px);
+  height: var(--nav-h);
+  background: rgba(5, 5, 5, 0.9);
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 30px;
+  padding: 0 2rem;
   z-index: 1000;
 }
 
 .logo {
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: 900;
   letter-spacing: -0.05em;
-  background: var(--gradient);
+  text-transform: uppercase;
+  font-style: italic;
+}
+
+/* --- TÍTULO GIGANTE --- */
+.main-title {
+  font-size: clamp(3rem, 15vw, 12rem);
+  font-weight: 800;
+  text-align: center;
+  letter-spacing: -0.08em;
+  margin: 80px 0 20px 0;
+  background: linear-gradient(180deg, #fff 30%, rgba(255,255,255,0.2) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-/* --- LAYOUT PRINCIPAL --- */
-.home-container {
-  padding-top: 100px; /* Para que el contenido no quede bajo la navbar */
+/* --- GRID ESTILO PINTEREST --- */
+.vibes-grid {
+  column-count: 2; /* Móvil */
+  column-gap: 12px;
+  padding: 0 12px 40px 12px;
   max-width: 1600px;
   margin: 0 auto;
 }
 
-.main-title {
-  font-size: clamp(3rem, 10vw, 8rem);
-  font-weight: 800;
-  text-align: center;
-  letter-spacing: -0.06em;
-  margin-bottom: 40px;
-  background: var(--gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
+@media (min-width: 768px) { .vibes-grid { column-count: 3; column-gap: 16px; padding: 0 24px; } }
+@media (min-width: 1200px) { .vibes-grid { column-count: 4; } }
+@media (min-width: 1600px) { .vibes-grid { column-count: 5; } }
 
-/* --- MASONRY GRID (Pinterest Style) --- */
-.vibes-grid {
-  column-count: 2; /* 2 columnas en móvil */
-  column-gap: 16px;
-  padding: 0 20px;
-}
-
-/* Breakpoints para que se vea bien en todas las pantallas */
-@media (min-width: 768px) { .vibes-grid { column-count: 3; } }
-@media (min-width: 1024px) { .vibes-grid { column-count: 4; } }
-@media (min-width: 1400px) { .vibes-grid { column-count: 5; } }
-
-/* --- TARJETAS (VibeCard) --- */
+/* --- TARJETAS --- */
 .vibe-card {
-  break-inside: avoid; /* IMPORTANTE: evita que la tarjeta se parta entre columnas */
+  break-inside: avoid; /* Evita que la foto se corte entre columnas */
   margin-bottom: 16px;
   background: var(--card-bg);
-  border-radius: 16px;
+  border-radius: 12px;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.03);
-  transition: transform 0.3s ease, border-color 0.3s ease;
-  cursor: pointer;
+  transition: transform 0.2s ease;
+  border: 1px solid rgba(255,255,255,0.03);
 }
 
 .vibe-card:hover {
-  transform: translateY(-4px);
-  border-color: rgba(168, 85, 247, 0.4);
+  transform: scale(1.02);
 }
 
 .vibe-card img {
   width: 100%;
   height: auto;
-  display: block; /* Quita el espacio extra bajo la imagen */
+  display: block;
 }
 
 .vibe-info {
@@ -105,51 +95,39 @@ body {
 }
 
 .vibe-info h3 {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   margin-bottom: 4px;
 }
 
 .vibe-info p {
-  font-size: 11px;
-  color: var(--text-dim);
+  font-size: 10px;
+  color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
-/* --- BOTONES Y SELECTORES --- */
+/* --- SELECTOR DE VISTAS --- */
 .view-selector {
   display: flex;
   justify-content: center;
-  gap: 20px;
+  gap: 24px;
   margin-bottom: 40px;
 }
 
 .view-selector button {
   background: none;
   border: none;
-  color: var(--text-dim);
+  color: var(--text-secondary);
   font-weight: 700;
-  font-size: 14px;
+  font-size: 12px;
+  text-transform: uppercase;
   cursor: pointer;
-  padding: 8px 16px;
-  transition: 0.2s;
+  letter-spacing: 0.1em;
 }
 
 .view-selector button.active {
   color: white;
-  border-bottom: 2px solid var(--accent);
-}
-
-/* Estilo para el botón de borrar */
-.delete-btn {
-  background: rgba(239, 68, 68, 0.1);
-  color: #ef4444;
-  border: none;
-  padding: 4px 8px;
-  border-radius: 6px;
-  font-size: 10px;
-  font-weight: bold;
-  margin-top: 8px;
-  cursor: pointer;
+  border-bottom: 2px solid white;
+  padding-bottom: 4px;
 }
