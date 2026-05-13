@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { auth, loginWithGoogle, logout } from "../firebase";
 import { onAuthStateChanged, type User } from "firebase/auth";
+import "./vibes-cute.css";
 
 const API_URL = 'https://8wlzgqn7-5000.uks1.devtunnels.ms'; 
 
@@ -41,7 +42,6 @@ const Home: React.FC = () => {
     return () => unsubscribe();
   }, []); 
 
-  // 👇 NUEVO: primero login, luego abre el modal
   const handleOpenUpload = () => {
     if (!user) {
       loginWithGoogle();
@@ -78,12 +78,15 @@ const Home: React.FC = () => {
     }
   };
 
-  const filteredVibes = view === "all" ? vibes : vibes.filter(v => v.userEmail === user?.email);
+  // ✅ FIX: user && evita que undefined === undefined sea true
+  const filteredVibes = view === "all"
+    ? vibes
+    : vibes.filter(v => user && v.userEmail === user.email);
 
   return (
     <div className="home-container">
       <nav className="topbar">
-        <div className="logo" onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})}>
+        <div className="logo" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
           BATNIE.
         </div>
         <div className="flex items-center gap-6">
@@ -135,13 +138,14 @@ const Home: React.FC = () => {
                 <div className="vibe-info">
                   <p>{vibe.category}</p>
                   <h3>{vibe.title}</h3>
-                  {user?.email === vibe.userEmail && (
+                  {/* ✅ FIX: user && evita borrar sin sesión */}
+                  {user && user.email === vibe.userEmail && (
                     <button 
                       onClick={(e) => {
                         e.stopPropagation();
                         deleteVibe(vibe._id, vibe.userEmail);
                       }}
-                      className="text-red-500 text-[9px] mt-2 uppercase font-bold tracking-widest"
+                      className="delete-btn"
                     >
                       Delete
                     </button>
@@ -164,7 +168,7 @@ const Home: React.FC = () => {
       {isModalOpen && (
         <div className="modal-overlay" onClick={() => setIsModalOpen(false)}>
           <div className="modal-content" onClick={e => e.stopPropagation()}>
-            <h2 className="text-white text-center mb-6 font-bold uppercase tracking-widest text-sm">New Vibe</h2>
+            <h2 className="modal-title">New Vibe ✦</h2>
             <form onSubmit={handleUpload} className="upload-form">
               <input type="text" placeholder="Title" required value={newVibe.title} onChange={e => setNewVibe({...newVibe, title: e.target.value})} />
               <input type="text" placeholder="Category" required value={newVibe.category} onChange={e => setNewVibe({...newVibe, category: e.target.value})} />
