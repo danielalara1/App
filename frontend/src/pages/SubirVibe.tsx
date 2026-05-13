@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { auth } from "../firebase";
 
 const API_URL = 'https://8wlzgqn7-5000.uks1.devtunnels.ms'; 
 
@@ -13,12 +14,18 @@ export const SubirVibe = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const user = auth.currentUser;
+    if (!user) {
+      alert("Debes iniciar sesión para subir una vibe");
+      return;
+    }
     try {
       await axios.post(`${API_URL}/api/vibes`, {
         title,
         category,
         imageUrl,
-        mediaUrl 
+        mediaUrl,
+        userEmail: user.email
       });
       navigate("/");
     } catch (error) {
