@@ -20,7 +20,7 @@ const Home: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [view, setView] = useState<"all" | "mine">("all");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [selectedImage, setSelectedImage] = useState<string | null>(null); // Para el zoom
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [newVibe, setNewVibe] = useState({ title: "", category: "", imageUrl: "", mediaUrl: "" });
   const sectionRef = useRef<HTMLDivElement>(null);
 
@@ -28,7 +28,6 @@ const Home: React.FC = () => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => { 
       setUser(currentUser); 
     });
-
     (async () => {
       try {
         const { data } = await axios.get(`${API_URL}/api/vibes`);
@@ -39,9 +38,17 @@ const Home: React.FC = () => {
         setLoading(false);
       }
     })();
-
     return () => unsubscribe();
   }, []); 
+
+  // 👇 NUEVO: primero login, luego abre el modal
+  const handleOpenUpload = () => {
+    if (!user) {
+      loginWithGoogle();
+    } else {
+      setIsModalOpen(true);
+    }
+  };
 
   const handleUpload = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -75,16 +82,14 @@ const Home: React.FC = () => {
 
   return (
     <div className="home-container">
-      {/* NAVBAR INTEGRADA: Foto de usuario arriba derecha */}
       <nav className="topbar">
         <div className="logo" onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})}>
           BATNIE.
         </div>
-        
         <div className="flex items-center gap-6">
           {user ? (
             <div className="flex items-center gap-4">
-              <button className="btn-primary" onClick={() => setIsModalOpen(true)}>+ Upload</button>
+              <button className="btn-primary" onClick={handleOpenUpload}>+ Upload</button>
               <div className="user-profile" onClick={logout} title="Click to Logout">
                 <span className="user-name-small">{user.displayName || user.email?.split('@')[0]}</span>
                 <img 
@@ -95,7 +100,7 @@ const Home: React.FC = () => {
               </div>
             </div>
           ) : (
-            <button className="btn-primary" onClick={loginWithGoogle}>Login</button>
+            <button className="btn-primary" onClick={handleOpenUpload}>Login & Upload</button>
           )}
         </div>
       </nav>
@@ -106,17 +111,11 @@ const Home: React.FC = () => {
 
       <main ref={sectionRef} className="content-main">
         <div className="view-selector">
-          <button 
-            onClick={() => setView("all")} 
-            className={view === "all" ? "active" : ""}
-          >
+          <button onClick={() => setView("all")} className={view === "all" ? "active" : ""}>
             All Vibes
           </button>
           {user && (
-            <button 
-              onClick={() => setView("mine")} 
-              className={view === "mine" ? "active" : ""}
-            >
+            <button onClick={() => setView("mine")} className={view === "mine" ? "active" : ""}>
               My Collection
             </button>
           )}
@@ -130,7 +129,7 @@ const Home: React.FC = () => {
               <div 
                 key={vibe._id} 
                 className="vibe-card"
-                onClick={() => setSelectedImage(vibe.imageUrl)} // Zoom al hacer click
+                onClick={() => setSelectedImage(vibe.imageUrl)}
               >
                 <img src={vibe.imageUrl} alt={vibe.title} loading="lazy" />
                 <div className="vibe-info">
@@ -139,7 +138,7 @@ const Home: React.FC = () => {
                   {user?.email === vibe.userEmail && (
                     <button 
                       onClick={(e) => {
-                        e.stopPropagation(); // Evita que se abra el zoom al borrar
+                        e.stopPropagation();
                         deleteVibe(vibe._id, vibe.userEmail);
                       }}
                       className="text-red-500 text-[9px] mt-2 uppercase font-bold tracking-widest"
@@ -154,7 +153,6 @@ const Home: React.FC = () => {
         )}
       </main>
 
-      {/* MODAL DE ZOOM (Style Pinterest) */}
       {selectedImage && (
         <div className="zoom-overlay" onClick={() => setSelectedImage(null)}>
           <div className="expanded-container">
@@ -163,7 +161,6 @@ const Home: React.FC = () => {
         </div>
       )}
 
-      {/* MODAL DE SUBIDA */}
       {isModalOpen && (
         <div className="modal-overlay" onClick={() => setIsModalOpen(false)}>
           <div className="modal-content" onClick={e => e.stopPropagation()}>
