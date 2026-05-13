@@ -15,7 +15,8 @@ const vibeSchema = new mongoose.Schema({
     title: String,      
     category: String,   
     imageUrl: String,   
-    mediaUrl: String    
+    mediaUrl: String,
+    userEmail: String   
 });
 
 const Vibe = mongoose.model('Vibe', vibeSchema);
@@ -26,8 +27,8 @@ const PORT = process.env.PORT || 5000;
 
 app.post('/api/vibes', async (req, res) => {
     try {
-        const { title, category, imageUrl, mediaUrl } = req.body;
-        const nuevaVibe = new Vibe({ title, category, imageUrl, mediaUrl });
+        const { title, category, imageUrl, mediaUrl, userEmail } = req.body; // ✅ añadido
+        const nuevaVibe = new Vibe({ title, category, imageUrl, mediaUrl, userEmail }); // ✅ añadido
         await nuevaVibe.save();
         res.status(201).json({ mensaje: "Vibe creada con éxito", vibe: nuevaVibe });
     } catch (error) {
