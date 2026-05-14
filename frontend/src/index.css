@@ -75,40 +75,38 @@ body::before {
   border-bottom: 2px solid var(--border);
   padding: 0 clamp(1rem, 4vw, 2rem);
   height: 62px;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
+  display: flex ;
+  align-items: center ;
+  justify-content: space-between ;
   gap: 12px;
 }
 
-/* 1. Mapeamos las clases flex y de alineación por si Tailwind no carga */
 .topbar .flex,
 .topbar [class*="flex"] {
-  display: flex !important;
+  display: flex ;
 }
 
 .topbar .items-center,
 .topbar [class*="items-center"] {
-  align-items: center !important;
+  align-items: center ;
 }
 
-/* 2. Arreglo para el contenedor principal de la derecha (gap-6) */
 .topbar .gap-6,
 .topbar [class*="gap-6"] {
-  display: flex !important;
-  flex-direction: row !important; /* Fuerza que se pongan uno al lado del otro */
-  align-items: center !important;
-  gap: 24px !important; /* El tamaño de gap-6 */
+  display: flex ;
+  flex-direction: row ; 
+  align-items: center ;
+  gap: 24px ; 
 }
 
-/* 3. Arreglo para tu DIV AZUL interno (gap-4 / display: flex inline) */
+
 .topbar .gap-4,
 .topbar [class*="gap-4"],
 .topbar div[style*="display: flex"] {
   display: flex !important;
-  flex-direction: row !important; /* ¡Esto evita que se ponga uno abajo del otro! */
-  align-items: center !important;
-  gap: 16px !important; /* El tamaño de gap-4 */
+  flex-direction: row ; 
+  align-items: center ;
+  gap: 16px ; 
 }
 
 .logo {
@@ -124,10 +122,10 @@ body::before {
 }
 
 .user-profile {
-  display: flex !important;
-  flex-direction: row !important; /* Asegura que el nombre vaya al lado de la foto */
-  align-items: center !important;
-  gap: 8px !important;
+  display: flex;
+  align-items: center;
+  flex-direction: row ; 
+  gap: 8px ;
   padding: 5px 12px 5px 5px;
   border-radius: 100px;
   border: 2px solid var(--border);
