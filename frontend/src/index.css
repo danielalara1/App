@@ -63,7 +63,7 @@ body::before {
 }
 
 /* ============================================================
-   TOPBAR
+   TOPBAR — CORREGIDO (CON SOPORTE FLEX MANUAL)
    ============================================================ */
 .topbar {
   position: sticky;
@@ -79,6 +79,36 @@ body::before {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+}
+
+/* DECLARACIÓN DE CLASES FLEX COMPLEMENTARIAS */
+.topbar .flex, 
+.topbar [class*="flex"] {
+  display: flex !important;
+}
+
+.topbar .items-center, 
+.topbar [class*="items-center"] {
+  align-items: center !important;
+}
+
+/* El div que contiene al botón + Perfil */
+.topbar .gap-6, 
+.topbar [class*="gap-6"] {
+  display: flex !important;
+  align-items: center !important;
+  flex-direction: row !important;
+  gap: 24px !important;
+}
+
+/* El div inline que envuelve al botón + Upload */
+.topbar .gap-4, 
+.topbar [class*="gap-4"],
+.topbar div[style*="display: flex"] {
+  display: flex !important;
+  align-items: center !important;
+  flex-direction: row !important;
+  gap: 16px !important;
 }
 
 .logo {
