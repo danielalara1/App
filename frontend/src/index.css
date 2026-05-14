@@ -63,7 +63,7 @@ body::before {
 }
 
 /* ============================================================
-   TOPBAR — ARREGLO DEFINITIVO PARA FILA HORIZONTAL
+   TOPBAR — ARREGLO DE ALINEACIÓN (CON CLASES MANUALES)
    ============================================================ */
 .topbar {
   position: sticky;
@@ -81,22 +81,34 @@ body::before {
   gap: 12px;
 }
 
-/* Fuerza a que el contenedor de la derecha se comporte como una fila */
-.topbar > div,
-.topbar .flex.items-center.gap-6 {
+/* 1. Mapeamos las clases flex y de alineación por si Tailwind no carga */
+.topbar .flex,
+.topbar [class*="flex"] {
   display: flex !important;
-  flex-direction: row !important;
-  align-items: center !important;
-  gap: 24px !important;
 }
 
-/* Fuerza al div interno (donde tienes el estilo inline) a ponerse en fila */
-.topbar > div > div,
-.topbar .flex.items-center.gap-6 > div {
-  display: flex !important;
-  flex-direction: row !important; /* Esto evita que se pongan uno abajo del otro */
+.topbar .items-center,
+.topbar [class*="items-center"] {
   align-items: center !important;
-  gap: 16px !important;
+}
+
+/* 2. Arreglo para el contenedor principal de la derecha (gap-6) */
+.topbar .gap-6,
+.topbar [class*="gap-6"] {
+  display: flex !important;
+  flex-direction: row !important; /* Fuerza que se pongan uno al lado del otro */
+  align-items: center !important;
+  gap: 24px !important; /* El tamaño de gap-6 */
+}
+
+/* 3. Arreglo para tu DIV AZUL interno (gap-4 / display: flex inline) */
+.topbar .gap-4,
+.topbar [class*="gap-4"],
+.topbar div[style*="display: flex"] {
+  display: flex !important;
+  flex-direction: row !important; /* ¡Esto evita que se ponga uno abajo del otro! */
+  align-items: center !important;
+  gap: 16px !important; /* El tamaño de gap-4 */
 }
 
 .logo {
@@ -113,7 +125,7 @@ body::before {
 
 .user-profile {
   display: flex !important;
-  flex-direction: row !important; /* Asegura el orden interno de la foto y el nombre */
+  flex-direction: row !important; /* Asegura que el nombre vaya al lado de la foto */
   align-items: center !important;
   gap: 8px !important;
   padding: 5px 12px 5px 5px;
