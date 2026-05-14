@@ -92,7 +92,6 @@ body::before {
   user-select: none;
 }
 
-/* ✅ FIX: contenedor de acciones con gap correcto */
 .topbar-actions {
   display: flex;
   align-items: center;
