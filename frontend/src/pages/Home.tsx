@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from "react"; 
 import axios from "axios";
-import { auth, loginWithGoogle } from "../firebase"; // Quitamos logout de aquí ya que se hace desde el Perfil
+import { auth, loginWithGoogle } from "../firebase"; 
 import { onAuthStateChanged, type User } from "firebase/auth";
-import { useNavigate } from "react-router-dom"; // 1. Importamos el navegador
-import "./index.css"; 
+import { useNavigate } from "react-router-dom"; 
+import "../index.css"; 
 
 const API_URL = 'https://8wlzgqn7-5000.uks1.devtunnels.ms'; 
 
@@ -26,7 +26,7 @@ const Home: React.FC = () => {
   const [newVibe, setNewVibe] = useState({ title: "", category: "", imageUrl: "", mediaUrl: "" });
   const sectionRef = useRef<HTMLDivElement>(null);
   
-  const navigate = useNavigate(); // 2. Inicializamos el hook de navegación
+  const navigate = useNavigate(); 
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => { 
@@ -87,7 +87,7 @@ const Home: React.FC = () => {
 
   return (
     <div className="home-container">
-      {/* BARRA SUPERIOR */}
+
       <nav className="topbar" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
         <div className="logo" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} style={{ cursor: 'pointer' }}>
           BATNIE.
@@ -100,7 +100,6 @@ const Home: React.FC = () => {
                 + Upload
               </button>
               
-              {/* 3. AL HACER CLIC AQUÍ, NOS LLEVA DIRECTAMENTE A /profile */}
               <div 
                 className="user-profile" 
                 onClick={() => navigate("/profile")} 
