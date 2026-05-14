@@ -84,18 +84,19 @@ const Home: React.FC = () => {
 
   return (
     <div className="home-container">
-      {/* BARRA DE NAVEGACIÓN TOTALMENTE CORREGIDA */}
-      <nav className="topbar">
+      <nav className="topbar" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
         <div className="logo" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
           BATNIE.
         </div>
-        <div className="topbar-actions">
+        
+        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '12px' }}>
           {user ? (
             <>
               <button className="btn-primary" onClick={handleOpenUpload}>
                 + Upload
               </button>
-              <div className="user-profile" onClick={logout} title="Click to Logout">
+              
+              <div className="user-profile" onClick={logout} title="Click to Logout" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
                 <span className="user-name-small">
                   {user.displayName || user.email?.split('@')[0]}
                 </span>
