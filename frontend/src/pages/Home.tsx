@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { auth, loginWithGoogle, logout } from "../firebase";
 import { onAuthStateChanged, type User } from "firebase/auth";
-import "./index.css"; 
+import "./vibes-cute.css";
 
 const API_URL = 'https://8wlzgqn7-5000.uks1.devtunnels.ms'; 
 
@@ -88,10 +88,9 @@ const Home: React.FC = () => {
         <div className="logo" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
           BATNIE.
         </div>
-        
-         <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
+        <div className="flex items-center gap-6">
           {user ? (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <div className="flex items-center gap-4">
               <button className="btn-primary" onClick={handleOpenUpload}>+ Upload</button>
               <div className="user-profile" onClick={logout} title="Click to Logout">
                 <span className="user-name-small">{user.displayName || user.email?.split('@')[0]}</span>
