@@ -41,6 +41,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Patrón de puntitos sutiles en el fondo */
 body::before {
   content: '';
   position: fixed;
@@ -64,26 +65,93 @@ body::before {
 /* ============================================================
    TOPBAR
    ============================================================ */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(253, 246, 255, 0.85);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border-bottom: 2px solid var(--border);
+  padding: 0 clamp(1rem, 4vw, 2rem);
+  height: 62px;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 12px;
+}
+
+/* SIMULADORES DE TAILWIND (SOPORTE NATIVO PARA TU HOME.TSX) */
 .topbar .flex {
-  display: flex ;
+  display: flex !important;
 }
 
 .topbar .items-center {
-  align-items: center ;
+  align-items: center !important;
 }
 
 .topbar .gap-4 {
-  flex-direction: row ;
-  gap: 16px ;
+  flex-direction: row !important;
+  gap: 16px !important;
 }
 
 .topbar .gap-3 {
-  flex-direction: row ;
-  gap: 12px ;
+  flex-direction: row !important;
+  gap: 12px !important;
 }
 
 .logo {
-  display: block ;
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #f472b6, #c084fc, #818cf8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  cursor: pointer;
+  user-select: none;
+  display: block !important;
+}
+
+.user-profile {
+  display: flex !important;
+  align-items: center !important;
+  flex-direction: row !important;
+  gap: 8px !important;
+  padding: 5px 12px 5px 5px;
+  border-radius: 100px;
+  border: 2px solid var(--border);
+  background: var(--bg-card);
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px var(--shadow);
+}
+
+.user-profile:hover {
+  border-color: #fca5a5;
+  box-shadow: 0 4px 14px rgba(252, 165, 165, 0.25);
+}
+
+.user-profile:hover .user-name-small { color: var(--pink); }
+
+.user-name-small {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-subtle);
+  transition: color 0.2s;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--pink);
 }
 
 /* ============================================================
@@ -149,6 +217,7 @@ body::before {
 .btn-submit:hover  { filter: brightness(1.07); }
 .btn-submit:active { transform: scale(0.97); }
 
+/* Botón eliminar dentro de la tarjeta */
 .delete-btn {
   display: inline-block;
   margin-top: 8px;
