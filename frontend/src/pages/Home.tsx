@@ -91,7 +91,7 @@ const Home: React.FC = () => {
         
         <div className="flex items-center gap-4">
           {user ? (
-            <div className="flex items-center gap-3">
+           <div className="flex items-center gap-3">
               <button className="btn-primary" onClick={handleOpenUpload}>+ Upload</button>
               <div className="user-profile" onClick={logout} title="Click to Logout">
                 <span className="user-name-small">{user.displayName || user.email?.split('@')[0]}</span>

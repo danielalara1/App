@@ -41,7 +41,6 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Patrón de puntitos sutiles en el fondo */
 body::before {
   content: '';
   position: fixed;
@@ -75,30 +74,28 @@ body::before {
   border-bottom: 2px solid var(--border);
   padding: 0 clamp(1rem, 4vw, 2rem);
   height: 62px;
-  display: flex !important;
-  flex-direction: row !important;
-  align-items: center !important;
-  justify-content: space-between !important;
+  display: flex ;
+  flex-direction: row ;
+  align-items: center ;
+  justify-content: space-between ;
   gap: 12px;
 }
-
-/* SIMULADORES DE TAILWIND (SOPORTE NATIVO PARA TU HOME.TSX) */
 .topbar .flex {
-  display: flex !important;
+  display: flex ;
 }
 
 .topbar .items-center {
-  align-items: center !important;
+  align-items: center ;
 }
 
 .topbar .gap-4 {
-  flex-direction: row !important;
-  gap: 16px !important;
+  flex-direction: row ;
+  gap: 16px ;
 }
 
 .topbar .gap-3 {
-  flex-direction: row !important;
-  gap: 12px !important;
+  flex-direction: row ;
+  gap: 12px ;
 }
 
 .logo {
@@ -111,14 +108,14 @@ body::before {
   background-clip: text;
   cursor: pointer;
   user-select: none;
-  display: block !important;
+  display: block ;
 }
 
 .user-profile {
-  display: flex !important;
-  align-items: center !important;
-  flex-direction: row !important;
-  gap: 8px !important;
+  display: flex ;
+  align-items: center ;
+  flex-direction: row ;
+  gap: 8px ;
   padding: 5px 12px 5px 5px;
   border-radius: 100px;
   border: 2px solid var(--border);
