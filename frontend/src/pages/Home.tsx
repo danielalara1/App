@@ -88,22 +88,27 @@ const Home: React.FC = () => {
         <div className="logo" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
           BATNIE.
         </div>
-        
-        <div className="flex items-center gap-4">
+        <div className="topbar-actions">
           {user ? (
-           <div className="flex items-center gap-3">
-              <button className="btn-primary" onClick={handleOpenUpload}>+ Upload</button>
+            <>
+              <button className="btn-primary" onClick={handleOpenUpload}>
+                + Upload
+              </button>
               <div className="user-profile" onClick={logout} title="Click to Logout">
-                <span className="user-name-small">{user.displayName || user.email?.split('@')[0]}</span>
+                <span className="user-name-small">
+                  {user.displayName || user.email?.split('@')[0]}
+                </span>
                 <img 
                   src={user.photoURL || `https://ui-avatars.com/api/?name=${user.email}&background=a855f7&color=fff`} 
                   alt="profile" 
                   className="user-avatar"
                 />
               </div>
-            </div>
+            </>
           ) : (
-            <button className="btn-primary" onClick={handleOpenUpload}>Login & Upload</button>
+            <button className="btn-primary" onClick={handleOpenUpload}>
+              Login & Upload
+            </button>
           )}
         </div>
       </nav>
