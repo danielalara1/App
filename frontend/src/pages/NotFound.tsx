@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import "./index.css";
+import "../index.css"; 
 
 const NotFound: React.FC = () => {
   const navigate = useNavigate();
@@ -10,7 +10,7 @@ const NotFound: React.FC = () => {
       <header className="home-header">
         <h1 className="main-title" style={{ fontSize: '8rem', marginBottom: '10px' }}>404</h1>
         <h2 style={{ color: 'var(--text)', fontSize: '24px', fontWeight: 800, marginBottom: '16px' }}>
-          ¡Ups! Vibe No Encontrada ✦
+          ¡Ups! Vibe No Encontrada 
         </h2>
         <p style={{ color: 'var(--text-subtle)', maxWidth: '400px', margin: '0 auto 32px', fontWeight: 600, lineHeight: 1.6 }}>
           La página que buscas no existe, ha cambiado de lugar o se ha desconfigurado por el camino.
