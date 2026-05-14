@@ -3,7 +3,7 @@ import axios from "axios";
 import { auth, logout } from "../firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import "./index.css";
+import "../index.css";
 
 const API_URL = 'https://8wlzgqn7-5000.uks1.devtunnels.ms';
 
@@ -19,17 +19,13 @@ const Profile: React.FC = () => {
   const [myVibes, setMyVibes] = useState<Vibe[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
-
-  // 1. Obtenemos los datos del usuario conectado directamente desde Firebase de forma segura
-  const currentUser = auth.currentUser;
+ const currentUser = auth.currentUser;
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (userLogged) => {
       if (!userLogged) {
-        // Si no detecta sesión activa, redirige fuera
         navigate("/");
       } else {
-        // 2. Si hay usuario, hacemos la petición directa usando su email
         try {
           const { data } = await axios.get(`${API_URL}/api/vibes`);
           const userVibes = data.filter((v: Vibe) => v.userEmail === userLogged.email);
@@ -44,8 +40,7 @@ const Profile: React.FC = () => {
     return () => unsubscribe();
   }, [navigate]);
 
-  // Si Firebase todavía está comprobando la sesión, mostramos un estado de carga temporal
-  if (!currentUser) return null;
+ if (!currentUser) return null;
 
   return (
     <div className="home-container">
