@@ -84,6 +84,7 @@ const Home: React.FC = () => {
 
   return (
     <div className="home-container">
+      {/* BARRA DE NAVEGACIÓN TOTALMENTE CORREGIDA */}
       <nav className="topbar">
         <div className="logo" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
           BATNIE.
