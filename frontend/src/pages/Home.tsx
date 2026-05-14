@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from "react"; 
 import axios from "axios";
-import { auth, loginWithGoogle, logout } from "../firebase";
+import { auth, loginWithGoogle } from "../firebase"; // Quitamos logout de aquí ya que se hace desde el Perfil
 import { onAuthStateChanged, type User } from "firebase/auth";
+import { useNavigate } from "react-router-dom"; // 1. Importamos el navegador
 import "./index.css"; 
 
 const API_URL = 'https://8wlzgqn7-5000.uks1.devtunnels.ms'; 
@@ -24,6 +25,8 @@ const Home: React.FC = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [newVibe, setNewVibe] = useState({ title: "", category: "", imageUrl: "", mediaUrl: "" });
   const sectionRef = useRef<HTMLDivElement>(null);
+  
+  const navigate = useNavigate(); // 2. Inicializamos el hook de navegación
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => { 
@@ -84,8 +87,9 @@ const Home: React.FC = () => {
 
   return (
     <div className="home-container">
+      {/* BARRA SUPERIOR */}
       <nav className="topbar" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-        <div className="logo" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+        <div className="logo" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} style={{ cursor: 'pointer' }}>
           BATNIE.
         </div>
         
@@ -96,7 +100,13 @@ const Home: React.FC = () => {
                 + Upload
               </button>
               
-              <div className="user-profile" onClick={logout} title="Click to Logout" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
+              {/* 3. AL HACER CLIC AQUÍ, NOS LLEVA DIRECTAMENTE A /profile */}
+              <div 
+                className="user-profile" 
+                onClick={() => navigate("/profile")} 
+                title="Ver mi perfil" 
+                style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px', cursor: 'pointer' }}
+              >
                 <span className="user-name-small">
                   {user.displayName || user.email?.split('@')[0]}
                 </span>
