@@ -532,3 +532,12 @@ body::before {
   box-shadow: 0 0 0 4px var(--pink-glow);
   background: #fff;
 }
+
+.topbar, .topbar *, [class*="user-profile"] {
+  display: flex ;
+  flex-direction: row ;
+  align-items: center ;
+}
+.logo {
+  display: block ; 
+}
