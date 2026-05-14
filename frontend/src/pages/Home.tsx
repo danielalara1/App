@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { auth, loginWithGoogle, logout } from "../firebase";
 import { onAuthStateChanged, type User } from "firebase/auth";
-import "./vibes-cute.css";
+import "./index.css"; 
 
 const API_URL = 'https://8wlzgqn7-5000.uks1.devtunnels.ms'; 
 
@@ -78,7 +78,6 @@ const Home: React.FC = () => {
     }
   };
 
-  // ✅ FIX: user && evita que undefined === undefined sea true
   const filteredVibes = view === "all"
     ? vibes
     : vibes.filter(v => user && v.userEmail === user.email);
@@ -89,9 +88,10 @@ const Home: React.FC = () => {
         <div className="logo" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
           BATNIE.
         </div>
-        <div className="flex items-center gap-6">
+        
+         <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
           {user ? (
-            <div className="flex items-center gap-4">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
               <button className="btn-primary" onClick={handleOpenUpload}>+ Upload</button>
               <div className="user-profile" onClick={logout} title="Click to Logout">
                 <span className="user-name-small">{user.displayName || user.email?.split('@')[0]}</span>
@@ -138,7 +138,6 @@ const Home: React.FC = () => {
                 <div className="vibe-info">
                   <p>{vibe.category}</p>
                   <h3>{vibe.title}</h3>
-                  {/* ✅ FIX: user && evita borrar sin sesión */}
                   {user && user.email === vibe.userEmail && (
                     <button 
                       onClick={(e) => {
