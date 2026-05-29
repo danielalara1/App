@@ -1,9 +1,7 @@
 venv/
 .venv/
-env/
-
 __pycache__/
-*.pyc
+reporte_seguridad_*.txt
 
 reporte_seguridad_*.txt
 
