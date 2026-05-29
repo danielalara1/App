@@ -8,3 +8,11 @@ reporte_seguridad_*.txt
 auth.log
 
 .vscode/
+
+node_modules/
+.pnp
+.pnp.js
+
+sysadmin_toolkit/venv/
+sysadmin_toolkit/__pycache__/
+sysadmin_toolkit/reporte_seguridad_*.txt
